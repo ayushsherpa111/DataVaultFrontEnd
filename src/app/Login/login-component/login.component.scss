@@ -1,0 +1,30 @@
+@import "../../../main-styles.scss";
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.title {
+  margin-left: 98px;
+  margin-top: 105px;
+  font-size: xx-large;
+}
+.sideBanner {
+  width: 128px;
+  height: 100vh;
+  background-image: url("../../../assets/Images/Vault.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+.sideBanner img{
+    width: inherit;
+    height: inherit;
+}
+#bitCanvas {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  z-index: -1;
+}

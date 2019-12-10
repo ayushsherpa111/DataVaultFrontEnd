@@ -1,0 +1,28 @@
+@import url("https://fonts.googleapis.com/css?family=Nunito&display=swap");
+
+$nunito: "Nunito", sans-serif;
+$background: #202225;
+$overlay: #36393f;
+$link: #93cbfe;
+$primaryBtn: #405fff;
+
+.container {
+  width: 100%;
+  color: white;
+  height: 100%;
+}
+
+.btn {
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 20px;
+  box-shadow: -1px 6px 12px 3px #2222228f;
+}
+.wide {
+  width: 100%;
+}
+.primary {
+  color: white;
+  background-color: $primaryBtn;
+}
