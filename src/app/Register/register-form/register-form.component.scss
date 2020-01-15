@@ -1,0 +1,107 @@
+@import "../../../main-styles.scss";
+
+.registerForm {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background-color: #292b2e;
+  padding: 20px;
+  width: 550px;
+  height: 566px;
+  border-radius: 8px;
+  right: 23%;
+  .title {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    .heading {
+      font-size: 40px;
+      font-weight: 100;
+    }
+    .option {
+      font-size: 20px;
+      align-self: flex-end;
+      a {
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.form {
+  margin-top: 30px;
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+    label {
+      padding-bottom: 3px;
+      font-size: 17px;
+      font-weight: 300;
+    }
+    input[type="text"],
+    input[type="password"] {
+      height: 47px;
+      background: #1a1c1f;
+      border: 1px solid #000000;
+      box-sizing: border-box;
+      box-shadow: inset 0px 4px 6px 1px rgba(0, 0, 0, 0.18);
+      border-radius: 8px;
+      font-size: 14px;
+      padding: 8px;
+      color: white;
+    }
+
+    .pWord {
+      display: flex;
+      width: 100%;
+      input {
+        width: 100%;
+      }
+      span {
+        z-index: 2;
+        margin-left: -51px;
+        width: 0;
+        margin-top: 5px;
+
+        &:hover {
+          cursor: pointer;
+          box-shadow: 2px 1px #3c3c3c;
+        }
+        img {
+          width: 35px;
+        }
+      }
+    }
+  }
+}
+
+.TOS {
+  display: flex;
+  margin-top: 15px;
+  label {
+    padding-bottom: 3px;
+    font-size: 17px;
+    font-weight: 300;
+  }
+  input[type="checkbox"] {
+    margin: 5px 5px 0 0;
+  }
+}
+.strengthBlock {
+  display: flex;
+  margin-top: 5px;
+  .passwordStrength {
+    border-radius: 8px;
+    width: 100%;
+    margin-top: 4px;
+    background-color: #b6b4b4;
+    height: 10px;
+    font-size: 10px;
+  }
+  span:nth-child(2) {
+    margin-left: 4px;
+    font-size: 15px;
+  }
+}

@@ -1,8 +1,8 @@
 @import "../../../main-styles.scss";
 .loginForm {
   margin-top: 155px;
-  width: 410px;
-  height: 406px;
+  width: 470px;
+  height: 415px;
   background-color: #292b2e;
   border-radius: 11px;
   box-shadow: 3px 17px 23px rgba(0, 0, 0, 0.35);
@@ -19,7 +19,7 @@
 .formGroup {
   display: flex;
   flex-direction: column;
-  padding: 10px 12px;
+  padding: 10px 20px;
 
   label {
     padding-bottom: 3px;
@@ -42,10 +42,8 @@
   }
 }
 .hintLink {
-  padding-left: 10px;
-  a {
-    color: $link;
-  }
+  padding-left: 20px;
+  
 }
 
 .registerLink {

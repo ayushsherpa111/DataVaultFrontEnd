@@ -1,0 +1,51 @@
+<div class="registerForm">
+  <div class="title">
+    <span class="heading">Create an account</span>
+    <span class="option">or <a routerLink="/login">Login</a></span>
+  </div>
+  <form class="form">
+    <div class="formGroup">
+      <label for="Email">Email</label>
+      <input type="text" name="Email" id="Email" />
+    </div>
+    <div class="formGroup">
+      <label for="masterPassword">Master Password</label>
+      <div class="pWord">
+        <input [type]="fieldType" name="masterPassword" id="masterPassword" />
+        <span
+          class="passToggle"
+          toggle="#masterPassword"
+          (click)="revealPassword()"
+          ><img [src]="'../../../assets/Images/' + eyeCon" alt="passwordToggle"
+        /></span>
+      </div>
+      <div class="strengthBlock">
+        <span class="passwordStrength">&nbsp;</span>
+        <span>Strength</span>
+      </div>
+    </div>
+    <div class="formGroup">
+      <label for="repeatMP">Repeat Master Password</label>
+      <div class="pWord">
+        <input [type]="fieldType" name="repeatMP" id="repeatMP" />
+        <span class="passToggle" toggle="#repeatMP" (click)="revealPassword()"
+          ><img [src]="'../../../assets/Images/' + eyeCon" alt="passwordToggle"
+        /></span>
+      </div>
+    </div>
+    <div class="formGroup">
+      <label for="mpHint"
+        >Master Password Hint* <span>(Optional but recommended)</span></label
+      >
+      <input type="text" name="mpHint" id="mpHint" />
+    </div>
+    <div class="TOS">
+      <input type="checkbox" name="TOS" id="TOS" /><label for="TOS"
+        >I have agreed to the Terms and Privacy Policy.</label
+      >
+    </div>
+    <div class="formGroup">
+      <button type="submit" class="btn primary">Sign Up</button>
+    </div>
+  </form>
+</div>

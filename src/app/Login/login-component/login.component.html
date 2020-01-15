@@ -1,10 +1,8 @@
 <canvas id="bitCanvas"></canvas>
 <div class="container">
-    <div class="title">
-      <p>Data Vault</p>
-    </div>
-    <app-login-form></app-login-form>
-    <div class="sideBanner">
-    </div>
+  <div class="title">
+    <p>Data Vault</p>
+  </div>
+  <app-login-form [ngStyle]="{ left: formPosition }"></app-login-form>
+  <div class="sideBanner" [ngStyle]="{ height: height }"></div>
 </div>
-

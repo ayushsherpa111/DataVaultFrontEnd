@@ -4,19 +4,29 @@ $nunito: "Nunito", sans-serif;
 $background: #202225;
 $overlay: #36393f;
 $link: #93cbfe;
-$primaryBtn: #405fff;
+$primaryBtn: #667ed6;
+$vaultIconBackground: "../../../assets/Images/Vault.png";
+$vaultIconBackgroundZOOM: "../../../assets/Images/Capture.png";
 
 .container {
   width: 100%;
   color: white;
   height: 100%;
 }
-
+a {
+  color: $link;
+}
 .btn {
   padding: 5px 10px;
   border-radius: 8px;
+  height: 45px;
   border: none;
   font-size: 20px;
+  transition: all 100ms ease-in;
+}
+.btn:hover {
+  cursor: pointer;
+  transform: scale(1.009);
   box-shadow: -1px 6px 12px 3px #2222228f;
 }
 .wide {
