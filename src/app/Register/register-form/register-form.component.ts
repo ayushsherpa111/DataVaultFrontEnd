@@ -7,8 +7,9 @@ import { Component, OnInit } from "@angular/core";
 })
 export class RegisterFormComponent implements OnInit {
   fieldType = "password";
-  images: string[] = ["open.svg", "close.svg"];
+  images: string[] = ["open.png", "close.png"];
   eyeCon = this.images[0];
+  TOS = false;
   constructor() {}
 
   ngOnInit() {}

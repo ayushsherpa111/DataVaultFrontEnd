@@ -1,18 +1,23 @@
 <div class="loginForm">
-  <form>
+  <form [formGroup]="loginForm">
     <div class="title">
       <p>Welcome Back</p>
     </div>
     <div class="formGroup">
       <label for="Email">Email</label>
-      <input type="text" id="Email" name="email" autocomplete="false" />
+      <input
+        type="text"
+        id="Email"
+        formControlName="email"
+        autocomplete="false"
+      />
     </div>
     <div class="formGroup">
       <label for="Password">Password</label>
       <input
         type="password"
         id="Password"
-        name="password"
+        formControlName="masterPassword"
         autocomplete="false"
       />
     </div>
@@ -20,10 +25,16 @@
       <a href="#">Forgot Password?</a>
     </div>
     <div class="hintLink registerLink">
-      No registered? <a routerLink="/register">Create a free account here</a>
+      Not registered? <a routerLink="/register">Create a free account here</a>
     </div>
     <div class="formGroup">
-      <button type="submit" class="btn primary wide">Login</button>
+      <button
+        type="submit"
+        class="btn primary wide"
+        (click)="logEmail()"
+      >
+        Login
+      </button>
     </div>
   </form>
 </div>

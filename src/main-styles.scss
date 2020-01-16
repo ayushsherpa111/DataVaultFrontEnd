@@ -36,3 +36,13 @@ a {
   color: white;
   background-color: $primaryBtn;
 }
+.grad {
+  color: white;
+  background: linear-gradient(
+    180deg,
+    #0a2d8a 0%,
+    #001d6b 51.04%,
+    rgba(32, 17, 134, 0.53) 100%,
+    rgba(14, 35, 91, 0.92) 100%
+  );
+}
