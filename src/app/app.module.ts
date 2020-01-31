@@ -5,9 +5,9 @@ import { AppComponent } from "./app.component";
 import { FileNotFoundComponent } from "./file-not-found/file-not-found.component";
 
 @NgModule({
-  declarations: [AppComponent, FileNotFoundComponent],
-  imports: [BrowserModule, AppRoutingModule],
-  providers: [],
-  bootstrap: [AppComponent]
+	declarations: [AppComponent, FileNotFoundComponent],
+	imports: [BrowserModule, AppRoutingModule],
+	providers: [],
+	bootstrap: [AppComponent]
 })
 export class AppModule {}

@@ -1,7 +1,7 @@
 import { HttpService } from "./../../Services/http-service.service";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { FormGroup, Validators, FormBuilder } from "@angular/forms";
-import * as crypto from "crypto-js";
+import { KeyGenService } from "src/app/Services/keyGen.service";
 
 interface DataValidity {
 	valid: boolean;
@@ -14,6 +14,8 @@ interface DataValidity {
 	styleUrls: ["./login-form.component.scss"]
 })
 export class LoginFormComponent implements OnInit {
+	@Output() displayLoading = new EventEmitter();
+
 	emailValid: DataValidity = {
 		err: "",
 		valid: false
@@ -29,16 +31,10 @@ export class LoginFormComponent implements OnInit {
 
 	constructor(
 		private formBuilder: FormBuilder,
-		private httpService: HttpService
+		private keyGenService: KeyGenService
 	) {
 		// 16: word Size, 1 word = 4bytes.
-		const txt = crypto.PBKDF2("Message", "secret", {
-			hasher: crypto.algo.SHA512,
-			keySize: 16,
-			iterations: 100
-		});
 		console.log("hell");
-		console.log(txt);
 	}
 
 	get isEmailValid(): boolean {
@@ -58,19 +54,11 @@ export class LoginFormComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		// this.loginForm.valueChanges
-		// 	.pipe(
-		// 		map((i) => {
-		// 			return {
-		// 				email: `Email: ${i.email}`,
-		// 				pass: `Password: ${i.masterPassword}`
-		// 			};
-		// 		}),
-		// 		tap((i) => console.log(i))
-		// 	)
-		// 	.subscribe();
+		this.keyGenService.userAuth();
 	}
+
 	login() {
+		this.displayLoading.emit(true);
 		const formValue = this.loginForm.getRawValue();
 		this.emailValid.valid = !this.isEmailValid;
 		this.passValid.valid = !this.isPasswordValid;
@@ -84,9 +72,18 @@ export class LoginFormComponent implements OnInit {
 		}
 
 		if (!this.emailValid.valid && !this.passValid.valid) {
-			this.httpService.login(formValue);
+			setTimeout(_ => {
+				this.keyGenService.deriveMasterKey(formValue).then(r => {
+					console.log(r);
+					this.displayLoading.emit(false);
+				});
+			}, 0);
 		} else {
-			console.log("WEER");
+			console.log("ERR");
+			this.displayLoading.emit(false);
 		}
+		// setTimeout(() => {
+		// 	this.displayLoading.emit(false);
+		// }, 2000);
 	}
 }

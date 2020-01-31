@@ -1,8 +1,14 @@
 <canvas id="bitCanvas"></canvas>
-<div class="container">
-  <div class="title">
-    <p>Data Vault</p>
-  </div>
-  <app-login-form [ngStyle]="{ left: formPosition }"></app-login-form>
-  <div class="sideBanner" [ngStyle]="{ height: height }"></div>
+<div class="loadingScreen">
+	<app-loading *ngIf="isLoading"></app-loading>
+</div>
+<div class="container" [ngClass]="{ blur: isLoading }">
+	<div class="title">
+		<p>Data Vault</p>
+	</div>
+	<app-login-form
+		(displayLoading)="loading($event)"
+		[ngStyle]="{ left: formPosition }"
+	></app-login-form>
+	<div class="sideBanner" [ngStyle]="{ height: height }"></div>
 </div>

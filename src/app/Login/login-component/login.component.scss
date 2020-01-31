@@ -1,33 +1,44 @@
 @import "../../../main-styles.scss";
 
 .container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
 }
 app-login-form {
-  position: absolute;
-  // left: 500px;
+	position: absolute;
+	// left: 500px;
 }
 .title {
-  margin: 25px 0 0 25px;
-  font-size: xx-large;
+	margin: 25px 0 0 25px;
+	font-size: xx-large;
 }
 .sideBanner {
-  width: 128px;
-  // height: 100%;
-  background-image: url($vaultIconBackground);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+	width: 128px;
+	// height: 100%;
+	background-image: url($vaultIconBackground);
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+}
+.blur{
+	filter: blur(2px);
 }
 .sideBanner img {
-  width: inherit;
-  height: inherit;
+	width: inherit;
+	height: inherit;
 }
+
 #bitCanvas {
-  width: 100vw;
-  height: 100vh;
-  position: absolute;
-  z-index: -1;
+	width: 100vw;
+	height: 100vh;
+	position: absolute;
+	z-index: -1;
+}
+
+.loadingScreen {
+	position: absolute;
+	width: 100vw;
+	height: 100vh;
+	text-align: center;
 }

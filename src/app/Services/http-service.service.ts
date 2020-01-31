@@ -12,8 +12,7 @@ export class HttpService {
 	) {}
 
 	login(user: User) {
-		if (this.keyGen.hashPass(user)) {
-			console.log("Key Saved", user);
-		}
+		console.log("Key Saved", user);
+		return this.keyGen.deriveMasterKey(user);
 	}
 }

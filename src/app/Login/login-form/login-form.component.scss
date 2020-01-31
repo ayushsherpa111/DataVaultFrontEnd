@@ -8,6 +8,14 @@
 	box-shadow: 3px 17px 23px rgba(0, 0, 0, 0.35);
 }
 
+.loading{
+	width: 100vw;
+	height: 100vh;
+	opacity: 0.5;
+	text-align: center;
+}
+
+
 .title {
 	font-size: xx-large;
 	width: 100%;
@@ -48,6 +56,7 @@
 		font-size: smaller;
 		font-style: oblique;
 	}
+
 }
 .hintLink {
 	font-size: 14px;
