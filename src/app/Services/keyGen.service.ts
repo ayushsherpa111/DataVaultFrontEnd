@@ -1,8 +1,8 @@
 import { StorageService } from "./storage.service";
 import { User, format } from "./../interfaces/user";
 import { Injectable } from "@angular/core";
-import * as cryptoJS from "crypto-js";
-
+import { environment } from "src/environments/environment";
+import { PBKDF2, algo, enc } from "crypto-js";
 @Injectable({
 	providedIn: "root"
 })
@@ -10,35 +10,15 @@ export class KeyGenService {
 	private salt: string;
 	constructor(private storageService: StorageService) {}
 
-	userAuth() {
-		if (typeof Worker !== "undefined") {
-			// Create a new
-			const worker = new Worker("./key-gen.worker");
-			worker.onmessage = ({ data }) => {
-				console.log(`page got message: ${data}`);
-			};
-			worker.postMessage("hello");
-		} else {
-			// Web Workers are not supported in this environment.
-			// You should add a fallback so that your program still executes correctly.
-		}
-	}
-
-	deriveMasterKey(user: User): Promise<string> {
-		console.log("GENNING");
-		return new Promise((resolve, reject) => {
-			this.salt = cryptoJS.lib.WordArray.random(128 / 8);
-			const masterKey = cryptoJS.PBKDF2(
-				user.email + user.masterPassword,
-				this.salt,
-				{
-					keySize: 256 / 32,
-					iterations: 10000,
-					hasher: cryptoJS.algo.SHA512
-				}
-			);
-			resolve(masterKey.toString(cryptoJS.enc.Hex));
+	deriveAuthKey(user: User, masterKey: string) {
+		const authPayLoad = masterKey + user.masterPassword;
+		const authKey = PBKDF2(authPayLoad, user.salt, {
+			keySize: 256 / 32,
+			iterations: 10,
+			hasher: algo.SHA512
 		});
+		console.log(`Here is your auth key: ${authKey.toString(enc.Hex)}`);
+		return false;
 	}
 
 	buf2hex(buffer) {

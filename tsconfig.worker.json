@@ -6,7 +6,9 @@
       "es2018",
       "webworker"
     ],
-    "types": []
+    "types": [
+      "crypto-js"
+    ]
   },
   "include": [
     "**/*.worker.ts"

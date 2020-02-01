@@ -1,17 +1,18 @@
 /// <reference lib="webworker" />
-import * as cryptoJS from "crypto-js";
+import { environment } from "./../../../environments/environment";
+import { PBKDF2, lib, algo, enc } from "crypto-js";
 
 addEventListener("message", ({ data }) => {
-	const response = `worker response to ${data}`;
-	postMessage(response);
-	this.salt = cryptoJS.lib.WordArray.random(128 / 8);
-	const masterKey = cryptoJS.PBKDF2(
-		data.email + data.masterPassword,
-		this.salt,
-		{
-			keySize: 256 / 32,
-			iterations: 10000,
-			hasher: cryptoJS.algo.SHA512
-		}
-	);
+	// This is running in the web-worker
+	const salt = lib.WordArray.random(128 / 8);
+	const masterKey = PBKDF2(data.email + data.masterPassword, salt, {
+		keySize: 256 / 32,
+		iterations: environment.masterKeyRounds,
+		hasher: algo.SHA512
+	});
+	const userObj = {
+		masterKey: masterKey.toString(enc.Hex),
+		salt
+	};
+	postMessage(userObj);
 });

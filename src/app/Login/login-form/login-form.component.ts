@@ -1,3 +1,4 @@
+import { User } from "./../../interfaces/user";
 import { HttpService } from "./../../Services/http-service.service";
 import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { FormGroup, Validators, FormBuilder } from "@angular/forms";
@@ -53,13 +54,9 @@ export class LoginFormComponent implements OnInit {
 		return this.loginForm.get("masterPassword");
 	}
 
-	ngOnInit() {
-		this.keyGenService.userAuth();
-	}
+	ngOnInit() {}
 
-	login() {
-		this.displayLoading.emit(true);
-		const formValue = this.loginForm.getRawValue();
+	validateLoginData() {
 		this.emailValid.valid = !this.isEmailValid;
 		this.passValid.valid = !this.isPasswordValid;
 		if (this.email.value === "") {
@@ -70,20 +67,30 @@ export class LoginFormComponent implements OnInit {
 		if (this.password.value === "") {
 			this.passValid.err = "Password is required";
 		}
+	}
 
+	login() {
+		this.displayLoading.emit(true);
+		const formValue = this.loginForm.getRawValue();
+		this.validateLoginData();
 		if (!this.emailValid.valid && !this.passValid.valid) {
-			setTimeout(_ => {
-				this.keyGenService.deriveMasterKey(formValue).then(r => {
-					console.log(r);
+			if (typeof Worker !== "undefined") {
+				const worker = new Worker("./key-gen.worker", { type: "module" });
+				worker.postMessage(formValue);
+
+				worker.onmessage = ({ data }) => {
+					formValue.salt = data.salt;
+					const masterKey = data.masterKey;
+					console.log(masterKey);
+					// this.keyGenService.deriveAuthKey(formValue, masterKey)
 					this.displayLoading.emit(false);
-				});
-			}, 0);
+				};
+			} else {
+				console.log("object");
+			}
 		} else {
 			console.log("ERR");
 			this.displayLoading.emit(false);
 		}
-		// setTimeout(() => {
-		// 	this.displayLoading.emit(false);
-		// }, 2000);
 	}
 }

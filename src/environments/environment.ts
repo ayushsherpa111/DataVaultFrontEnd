@@ -4,8 +4,8 @@
 
 export const environment = {
 	production: false,
-	// tslint:disable-next-line: max-line-length
-	salt: "6fdb352a9338753cec5f57b0d07e7e3fc036f0957dc0dcb3be4a5c9bdeef9c01b46f9ebab0fb017e6f7e58b72dfba21e0ed5fd375a077e699e4df2a169642b5e8a127ff0327f3e8868dabaeb77f86cce"
+	masterKeyRounds: 100000,
+	clientAuthRounds: 5000
 };
 
 /*
