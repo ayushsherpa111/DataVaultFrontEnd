@@ -4,8 +4,9 @@
 
 export const environment = {
 	production: false,
-	masterKeyRounds: 100000,
-	clientAuthRounds: 5000
+	masterKeyRounds: 50000,
+	clientAuthRounds: 5000,
+	serverRoute: "http://localhost:8001"
 };
 
 /*

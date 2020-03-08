@@ -1,53 +1,126 @@
 <div class="registerForm">
-  <div class="title">
-    <span class="heading">Create an account</span>
-    <span class="option">or <a routerLink="/login">Login</a></span>
-  </div>
-  <form class="form">
-    <div class="formGroup">
-      <label for="Email">Email</label>
-      <input type="text" name="Email" id="Email" />
-    </div>
-    <div class="formGroup">
-      <label for="masterPassword">Master Password</label>
-      <div class="pWord">
-        <input [type]="fieldType" name="masterPassword" id="masterPassword" />
-        <span
-          class="passToggle"
-          toggle="#masterPassword"
-          (click)="revealPassword()"
-          ><img [src]="'../../../assets/Images/' + eyeCon" alt="passwordToggle"
-        /></span>
-      </div>
-      <div class="strengthBlock">
-        <span class="passwordStrength">&nbsp;</span>
-        <span>Strength</span>
-      </div>
-    </div>
-    <div class="formGroup">
-      <label for="repeatMP">Repeat Master Password</label>
-      <div class="pWord">
-        <input [type]="fieldType" name="repeatMP" id="repeatMP" />
-        <span class="passToggle" toggle="#repeatMP" (click)="revealPassword()"
-          ><img [src]="'../../../assets/Images/' + eyeCon" alt="passwordToggle"
-        /></span>
-      </div>
-    </div>
-    <div class="formGroup">
-      <label for="mpHint"
-        >Master Password Hint* <span>(Optional but recommended)</span></label
-      >
-      <input type="text" name="mpHint" id="mpHint" />
-    </div>
-    <div class="TOS">
-      <div class="squaredThree">
-        <input type="checkbox" [checked]="TOS" name="TOS" id="TOS" />
-        <label for="squaredThree" (click)="TOS = true"></label>
-      </div>
-      <label for="TOS">I have agreed to the Terms and Privacy Policy.</label>
-    </div>
-    <div class="formGroup">
-      <button type="submit" class="btn grad">Sign Up</button>
-    </div>
-  </form>
+	<div class="title">
+		<span class="heading">Create an account</span>
+		<span class="option">or <a routerLink="/login">Login</a></span>
+	</div>
+	<form class="form" [formGroup]="registerForm" (ngSubmit)="registerUser()">
+		<div class="formGroup">
+			<div style="display: flex;justify-content: space-between;">
+				<label for="Email">Email</label>
+				<label
+					[class.is-invalid]="checkValidation('email')"
+					*ngIf="checkValidation('email') && email.errors.email"
+					><i>The email is invalid</i></label
+				>
+				<label
+					[class.is-invalid]="checkValidation('email')"
+					*ngIf="checkValidation('email') && email.errors.required"
+					><i>This field is required</i></label
+				>
+				<label
+					[class.is-invalid]="checkValidation('email')"
+					*ngIf="checkValidation('email') && email.errors.notUnique"
+					><i>Email is already in use</i></label
+				>
+				<div
+					class="lds-dual-ring"
+					*ngIf="email.valid && (email.touched || email.dirty) && isEmailTaken"
+				></div>
+			</div>
+			<input
+				type="text"
+				name="Email"
+				id="Email"
+				required
+				formControlName="email"
+				autocomplete="false"
+				[class.is-invalid]="checkValidation('email')"
+				[class.valid]="!isEmailTaken && email.valid"
+			/>
+		</div>
+		<div class="formGroup">
+			<div style="display: flex;justify-content: space-between;">
+				<label for="masterPassword">Master Password</label>
+				<label
+					[class.is-invalid]="checkValidation('masterPassword')"
+					*ngIf="
+						checkValidation('masterPassword') && masterPass.errors.required
+					"
+					><i>This field is required</i></label
+				>
+				<label
+					[class.is-invalid]="checkValidation('masterPassword')"
+					*ngIf="
+						checkValidation('masterPassword') && masterPass.errors.minlength
+					"
+					><i>Choose a password longer that 8 characters.</i></label
+				>
+			</div>
+			<div class="pWord">
+				<input
+					[type]="fieldType"
+					name="masterPassword"
+					id="masterPassword"
+					required="true"
+					formControlName="masterPassword"
+					[class.is-invalid]="checkValidation('masterPassword')"
+				/>
+				<span
+					class="passToggle"
+					toggle="#masterPassword"
+					(click)="revealPassword()"
+					><img [src]="'../../../assets/Images/' + eyeCon" alt="passwordToggle"
+				/></span>
+			</div>
+			<div class="strengthBlock">
+				<div class="passwordStrength">
+					<span
+						class="meter"
+						[style.width]="strengthMeter"
+						[style.background]="strengthColor"
+						>&nbsp;</span
+					>
+				</div>
+				<span>Strength</span>
+			</div>
+		</div>
+		<div class="formGroup">
+			<div style="display: flex;justify-content: space-between;">
+				<label for="repeatMP">Confirm Master Password</label>
+				<label
+					[class.is-invalid]="checkValidation('confirmPass')"
+					*ngIf="checkValidation('confirmPass')"
+					><i>Password doesn't match</i></label
+				>
+			</div>
+			<div class="pWord">
+				<input
+					[type]="fieldType"
+					name="repeatMP"
+					id="repeatMP"
+					[class.is-invalid]="checkValidation('confirmPass')"
+					formControlName="confirmPass"
+				/>
+				<span class="passToggle" toggle="#repeatMP" (click)="revealPassword()"
+					><img [src]="'../../../assets/Images/' + eyeCon" alt="passwordToggle"
+				/></span>
+			</div>
+		</div>
+		<div class="formGroup">
+			<label for="mpHint"
+				>Master Password Hint* <span>(Optional but recommended)</span></label
+			>
+			<input type="text" name="mpHint" id="mpHint" formControlName="hint" />
+		</div>
+		<div class="TOS">
+			<div class="squaredThree">
+				<input type="checkbox" [checked]="TOS" name="TOS" id="TOS" />
+				<label for="squaredThree" (click)="TOS = !TOS"></label>
+			</div>
+			<label for="TOS">I have agreed to the Terms and Privacy Policy.</label>
+		</div>
+		<div class="formGroup">
+			<button type="submit" class="btn grad">Sign Up</button>
+		</div>
+	</form>
 </div>

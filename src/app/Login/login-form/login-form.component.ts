@@ -77,7 +77,6 @@ export class LoginFormComponent implements OnInit {
 			if (typeof Worker !== "undefined") {
 				const worker = new Worker("./key-gen.worker", { type: "module" });
 				worker.postMessage(formValue);
-
 				worker.onmessage = ({ data }) => {
 					formValue.salt = data.salt;
 					const masterKey = data.masterKey;

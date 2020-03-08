@@ -14,14 +14,15 @@ app-login-form {
 	font-size: xx-large;
 }
 .sideBanner {
-	width: 128px;
+	width: 143px;
 	// height: 100%;
 	background-image: url($vaultIconBackground);
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: cover;
+	background-position-x: -332px;
 }
-.blur{
+.blur {
 	filter: blur(2px);
 }
 .sideBanner img {
