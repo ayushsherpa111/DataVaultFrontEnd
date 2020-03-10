@@ -2,11 +2,19 @@ import { lib } from "crypto-js";
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { of } from "rxjs";
-import { catchError, debounceTime, distinctUntilChanged } from "rxjs/operators";
+import {
+	catchError,
+	debounceTime,
+	distinctUntilChanged,
+	map,
+	tap
+} from "rxjs/operators";
 import { identityRevealedValidator } from "src/app/custom validators/passMatch";
 import { HttpService } from "src/app/Services/http-service.service";
 import { StorageService } from "src/app/Services/storage.service";
 import passwordSchema from "../../interfaces/strenght";
+import { HttpHeaders, HttpResponse } from "@angular/common/http";
+import { worker } from "cluster";
 @Component({
 	selector: "app-register-form",
 	templateUrl: "./register-form.component.html",
@@ -20,6 +28,7 @@ export class RegisterFormComponent implements OnInit {
 		digits: 0,
 		splChr: 0
 	};
+	hasSubmitted = false;
 	strengthMeter = "100%";
 	strengthColor = "";
 	registerForm: FormGroup = this.formBuilder.group(
@@ -184,23 +193,41 @@ export class RegisterFormComponent implements OnInit {
 
 	registerUser() {
 		this.registerForm.get("hint").clearValidators();
+		this.registerForm.markAsUntouched();
 		const userData = this.registerForm.getRawValue();
-		userData.salt = lib.WordArray.random(128 / 8);
-		// userData.salt = new Uint8Array(userData.salt.words);
-		console.log(this.masterPass.errors);
-		console.log(this.email.errors);
+		if (userData.hint === "") {
+			delete userData.hint;
+		}
 		if (this.TOS && this.registerForm.status !== "INVALID") {
-			// this.http
-			// 	.register(userData)
-			// 	.pipe(
-			// 		catchError(e => {
-			// 			return of(e);
-			// 		})
-			// 	)
-			// 	.subscribe(e => {
-			// 		console.log(e);
-			// 	});
+			this.hasSubmitted = true;
+			delete userData.confirmPass;
+			if (typeof Worker !== undefined) {
+				const authKeyWorker = new Worker("./auth-key.worker", {
+					type: "module"
+				});
+				authKeyWorker.postMessage(userData.masterPassword + userData.email);
+				authKeyWorker.onmessage = e => {
+					const userCopy = { ...userData };
+					userCopy.masterPassword = e.data;
+					console.log(userCopy);
+					const header = new HttpHeaders({
+						"Content-Type": "application/json"
+					});
+					this.http
+						.register(userCopy, header)
+						.pipe(
+							catchError(err => {
+								return of(err);
+							})
+						)
+						.subscribe(resp => {
+							this.hasSubmitted = false;
+							console.log(resp);
+						});
+				};
+			}
 		} else {
+			this.registerForm.markAllAsTouched();
 			console.log("Please agree to the TOS");
 		}
 	}

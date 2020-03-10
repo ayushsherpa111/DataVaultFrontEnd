@@ -117,10 +117,28 @@
 				<input type="checkbox" [checked]="TOS" name="TOS" id="TOS" />
 				<label for="squaredThree" (click)="TOS = !TOS"></label>
 			</div>
-			<label for="TOS">I have agreed to the Terms and Privacy Policy.</label>
+			<label
+				for="TOS"
+				[ngClass]="{
+					invalid: this.registerForm.invalid && this.registerForm.touched
+				}"
+				>I have agreed to the Terms and Privacy Policy.</label
+			>
 		</div>
 		<div class="formGroup">
-			<button type="submit" class="btn grad">Sign Up</button>
+			<button type="submit" class="btn grad" [disabled]="hasSubmitted">
+				<span *ngIf="!hasSubmitted; else spinnerLoad">Sign Up</span>
+				<ng-template #spinnerLoad>
+					<div class="lds-dual-ring"></div>
+				</ng-template>
+			</button>
 		</div>
 	</form>
+</div>
+
+<div class="popUpDiv" #emailModal>
+	<div class="close">
+		<img src="assets/Images/exit.svg" alt="" />
+	</div>
+	<app-pop-up></app-pop-up>
 </div>

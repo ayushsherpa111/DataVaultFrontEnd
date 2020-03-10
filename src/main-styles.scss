@@ -50,3 +50,7 @@ a:hover {
 		rgba(14, 35, 91, 0.92) 100%
 	);
 }
+input:focus,
+button:focus {
+	outline: none;
+}

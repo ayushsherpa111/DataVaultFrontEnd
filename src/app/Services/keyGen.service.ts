@@ -14,7 +14,7 @@ export class KeyGenService {
 		const authPayLoad = masterKey + user.masterPassword;
 		const authKey = PBKDF2(authPayLoad, user.salt, {
 			keySize: 256 / 32,
-			iterations: 10,
+			iterations: environment.clientAuthRounds,
 			hasher: algo.SHA512
 		});
 		console.log(`Here is your auth key: ${authKey.toString(enc.Hex)}`);

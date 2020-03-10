@@ -174,8 +174,19 @@ label.is-invalid {
 	color: red;
 	font-style: italic;
 	font-size: 13px !important;
+	animation: comeIn 500ms;
 }
+@keyframes comeIn {
+	from {
+		visibility: hidden;
+	}
+	to {
+		visibility: visible;
+	}
+}
+
 input.is-invalid {
+	transition: border-color 500ms ease;
 	border-color: red !important;
 }
 
@@ -204,5 +215,32 @@ input.is-invalid {
 	}
 	100% {
 		transform: rotate(360deg);
+	}
+}
+// .popUpDiv::before {
+// 	content: "";
+// 	background-color: rgba(0, 0, 0, 0.8);
+// }
+.popUpDiv {
+	margin: 0 auto;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	z-index: 1;
+	top: 100px;
+	width: 440px;
+	height: 160px;
+	box-shadow: 2px 3px 5px white;
+	align-items: flex-end;
+	transform: translate(-1%, 45%);
+	.close {
+		position: absolute;
+		left: 107%;
+		top: -2%;
+		img {
+			width: 40px;
+			height: 40px;
+			cursor: pointer;
+		}
 	}
 }
