@@ -10,6 +10,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "importHelpers": true,
+    "allowSyntheticDefaultImports": true,
     "target": "es2015",
     "typeRoots": [
       "node_modules/@types"
@@ -19,8 +20,17 @@
       "dom"
     ]
   },
+  "include": [
+    "main.ts",
+    "src/**/*",
+    "tsconfig.app.json"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true
+    "strictInjectionParameters": true,
+    "target": "electron-renderer"
   }
 }

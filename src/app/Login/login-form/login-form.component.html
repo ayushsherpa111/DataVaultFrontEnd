@@ -6,8 +6,31 @@
 		<div class="formGroup">
 			<label for="Email"
 				>Email
-				<span class="invMsg" *ngIf="emailValid.valid">
-					{{ emailValid.err }}
+				<span
+					class="invMsg"
+					*ngIf="
+						email.invalid &&
+						(email.touched || email.dirty) &&
+						email.errors.required
+					"
+				>
+					This field is required
+				</span>
+				<span
+					class="invMsg"
+					*ngIf="
+						email.invalid &&
+						(email.touched || email.dirty) &&
+						email.errors.email
+					"
+				>
+					Please enter a valid email
+				</span>
+				<span
+					class="invMsg"
+					*ngIf="(email.touched || email.dirty) && (email.errors?.notFound)"
+				>
+					The email/password provided was invalid.
 				</span>
 			</label>
 			<input
@@ -16,23 +39,34 @@
 				required
 				formControlName="email"
 				autocomplete="false"
-				[ngClass]="{ invalid: emailValid.valid }"
+				[ngClass]="{
+					invalid: email.invalid && (email.touched || email.dirty) && (email.errors?.notFound)
+				}"
 			/>
 		</div>
 		<div class="formGroup">
 			<label for="Password"
 				>Password
-				<span class="invMsg" *ngIf="passValid.valid">
-					{{ passValid.err }}
-				</span></label
-			>
+				<span
+					class="invMsg"
+					*ngIf="
+						password.invalid &&
+						(password.touched || password.dirty) &&
+						password.errors.required
+					"
+				>
+					This field is required
+				</span>
+			</label>
 			<input
 				type="password"
 				id="Password"
 				required
 				formControlName="masterPassword"
 				autocomplete="false"
-				[ngClass]="{ invalid: passValid.valid }"
+				[ngClass]="{
+					invalid: password.invalid && (password.touched || password.dirty)
+				}"
 			/>
 		</div>
 		<div class="hintLink">

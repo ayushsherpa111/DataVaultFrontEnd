@@ -8,13 +8,15 @@ import { RegisterComponent } from "./register-component/register.component";
 import { HttpClientModule } from "@angular/common/http";
 import { UniqueEmailDirective } from "../custom validators/uniqueEmail.directive";
 import { PopUpComponent } from "./pop-up/pop-up.component";
+import { ConfirmLoginComponent } from "./confirm-login/confirm-login.component";
 
 @NgModule({
 	declarations: [
 		RegisterComponent,
 		RegisterFormComponent,
 		UniqueEmailDirective,
-		PopUpComponent
+		PopUpComponent,
+		ConfirmLoginComponent
 	],
 	imports: [
 		CommonModule,

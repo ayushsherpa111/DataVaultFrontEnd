@@ -1,1 +1,63 @@
-<p>home-page works!</p>
+<div class="homeBody">
+	<div class="sideBar">
+		<div
+			class="option"
+			*ngFor="let icon of sideBar"
+			(click)="icon.click == 'load' ? loadComponent(icon.load) : logoutUser()"
+		>
+			<img
+				src="assets/Images/{{ icon.img }}"
+				alt=""
+				[ngStyle]="{
+					width: icon.width
+				}"
+			/>
+		</div>
+	</div>
+	<div class="content">
+		<!-- <app-welcome [data]="currUser"></app-welcome> -->
+		<ng-container *ngIf="childComponent == contents[0]">
+			<app-welcome [data]="currUser" (bruh)="logoutUser()"></app-welcome>
+		</ng-container>
+		<ng-container *ngIf="childComponent == contents[1]">
+			<app-add-password
+				(viewVault)="loadComponent($event)"
+				(addPassword)="redoVault($event)"
+				[hasRenter]="reEnterPrompt"
+				(reEnterPrompt)="rePrompt($event)"
+			></app-add-password>
+		</ng-container>
+		<ng-container *ngIf="childComponent == contents[2]">
+			<app-vault
+				[VAULT]="sortedVault"
+				(delete)="deletePass($event)"
+				(reEnterPrompt)="rePrompt($event)"
+				(changeComp)="loadComponent($event)"
+			></app-vault>
+		</ng-container>
+		<ng-container *ngIf="childComponent == contents[3]">
+			<app-password-generator></app-password-generator>
+		</ng-container>
+	</div>
+</div>
+
+<div class="formprompt" *ngIf="reEnterPrompt">
+	<h1>Re-Enter Your Master Password</h1>
+	<p>
+		Looks like your master password has expired. Reenter to start encrypting
+		again.
+	</p>
+	<div class="passInp">
+		<input
+			type="password"
+			name="password"
+			id=""
+			placeholder="Your Password Here..."
+			[(ngModel)]="reEnterPas"
+		/>
+		<div class="options">
+			<button class="button" (click)="sendToMain()">Submit</button>
+			<button class="button" (click)="cancelPrompt()">Cancel</button>
+		</div>
+	</div>
+</div>

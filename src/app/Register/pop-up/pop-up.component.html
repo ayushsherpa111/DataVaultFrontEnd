@@ -1,7 +1,7 @@
 <div class="outer">
 	<div class="popup">
 		<div class="iconDiv">
-			<img src="assets/Images/envelope.png" alt="" srcset="" />
+			<img src="/assets/Images/envelope.png" alt="" srcset="" />
 		</div>
 		<div class="details">
 			We’ve sent you a verification email. Please confirm to finish the
@@ -9,7 +9,10 @@
 		</div>
 	</div>
 	<div class="options">
-		<button>Resend</button>
+		<div class="resend">
+			<p>{{ messageBody }}</p>
+		</div>
+		<button (click)="resendConf()">Resend</button>
 		<button [routerLink]="['/login']" routerLinkActive="router-link-active">
 			Login
 		</button>

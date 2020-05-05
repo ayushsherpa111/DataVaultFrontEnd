@@ -1,0 +1,121 @@
+.regDiv {
+	background-repeat: no-repeat;
+	background-size: 75vw 84vh;
+	width: 100vw;
+	height: 100vh;
+	background-position: -3vw 9vh;
+	background-color: #aac6fc;
+	// background-image: url("../../../assets/Images/abstract-3.png");
+
+	.welcome {
+		position: relative;
+		top: 17%;
+		left: 61%;
+		width: 376px;
+		text-shadow: 0px 5px 7px #9c9c9c;
+		font-size: 21px;
+		p {
+			font-size: 19px;
+		}
+		&.errD {
+			width: 446px;
+		}
+		h1 {
+			line-height: 44px;
+			text-align: left;
+			margin-bottom: 16px;
+		}
+	}
+	&.err {
+		background-size: 61vw 79vh !important;
+		background-position: 5vw 11vh !important;
+	}
+	.proceed {
+		position: relative;
+		top: 49vh;
+		left: 62vw;
+		width: 327px;
+		font-size: 30px;
+		display: flex;
+		align-items: center;
+		img {
+			width: 37px;
+			height: 37px;
+			border-radius: 50%;
+			margin-left: 21px;
+			transition: all 200ms ease-out;
+			&:hover {
+				cursor: pointer;
+				transform: scale(1.2);
+				box-shadow: 0px 7px 11px 0px #0000004f;
+			}
+			&:active {
+				transform: scale(0.99);
+			}
+		}
+	}
+}
+
+@media (max-width: 1400px) {
+	.proceed {
+		top: 46vh !important;
+		font-size: 20px !important;
+	}
+	.welcome {
+		width: 370px;
+		font-size: 25px;
+	}
+}
+
+.btn {
+	width: 37px;
+	height: 30px;
+	margin-left: 10px;
+	padding: 0px;
+	background-repeat: no-repeat;
+	background-image: url("../../../assets/Images/resend.png");
+	background-size: 31px 27px;
+	background-position: 3px;
+	&:hover {
+		box-shadow: 0px 7px 17px 0px #22222257;
+	}
+	&:active {
+		transform: scale(0.99);
+	}
+}
+
+.reqForm {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	width: 306px;
+	input[type="text"] {
+		padding: 8px;
+		border: none;
+		width: 235px;
+		border-radius: 8px;
+		&:focus {
+			outline: none;
+			border: 1px solid black;
+		}
+	}
+	span {
+		font-size: 15px;
+		margin-top: 5px;
+		color: red;
+		font-style: oblique;
+		animation: slideDown 900ms cubic-bezier(0, 1.05, 0.36, 1.04);
+	}
+}
+
+@keyframes slideDown {
+	0%{
+		transform: translateX(10px);
+	}
+	50%{
+		transform: translateX(-10px);
+	}
+	100%{
+		transform: translateX(0px);
+	}
+}

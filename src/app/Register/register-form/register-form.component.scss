@@ -12,9 +12,10 @@ $background: #3498db;
 	background-color: #292b2e;
 	padding: 20px;
 	width: 550px;
-	height: 566px;
+	height: 76%;
 	border-radius: 8px;
 	right: 9%;
+box-shadow: 0px 5px 18px #818de03b;
 	.title {
 		display: flex;
 		width: 100%;
@@ -91,13 +92,18 @@ $background: #3498db;
 .TOS {
 	display: flex;
 	margin-top: 15px;
+	align-items: stretch;
 	label {
 		padding-bottom: 3px;
-		font-size: 17px;
+		font-size: 14px;
 		font-weight: 300;
 	}
 	input[type="checkbox"] {
 		margin: 5px 5px 0 0;
+	}
+	.invalid{
+		color:red;
+		font-style: italic;
 	}
 }
 .strengthBlock {
@@ -132,7 +138,7 @@ $background: #3498db;
 .squaredThree {
 	position: relative;
 	margin-right: 10px;
-	height: 5px;
+	height: 0px;
 	label {
 		width: 20px;
 		height: 20px;

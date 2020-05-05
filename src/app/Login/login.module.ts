@@ -10,6 +10,11 @@ import { LoadingComponent } from "../ui/loading/loading.component";
 
 @NgModule({
 	declarations: [LoginComponent, LoginFormComponent, LoadingComponent],
-	imports: [CommonModule, LoginRoutingModule, FormsModule, ReactiveFormsModule]
+	imports: [
+		CommonModule,
+		LoginRoutingModule,
+		FormsModule,
+		ReactiveFormsModule,
+	],
 })
 export class LoginModule {}

@@ -6,12 +6,13 @@ const routes: Routes = [
 	{
 		path: "",
 		component: HomePageComponent,
-		children: []
-	}
+		children: [],
+	},
 ];
 
 @NgModule({
 	imports: [RouterModule.forChild(routes)],
-	exports: [RouterModule]
+	exports: [RouterModule],
+	declarations: [],
 })
 export class HomeRoutingModule {}

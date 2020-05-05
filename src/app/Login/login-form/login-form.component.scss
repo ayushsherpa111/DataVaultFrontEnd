@@ -2,8 +2,8 @@
 .loginForm {
 	margin-top: 155px;
 	width: 474px;
-	height: 399px;
 	background-color: #292b2e;
+	padding: 20px;
 	border-radius: 5px;
 	box-shadow: 3px 17px 23px rgba(0, 0, 0, 0.35);
 }
@@ -19,50 +19,28 @@
 	font-size: xx-large;
 	width: 100%;
 	padding-top: 22px;
-	padding-bottom: 15px;
+	padding-bottom: 22px;
 	text-align: center;
 }
 
-.formGroup {
-	display: flex;
-	flex-direction: column;
-	padding: 9px 27px;
-	padding-bottom: 4px;
-	label {
-		padding-bottom: 3px;
-		font-size: 15px;
-		font-weight: 300;
-	}
-	input {
-		height: 47px;
-		background: #1a1c1f;
-		border: 1px solid #000000;
-		box-sizing: border-box;
-		box-shadow: inset 0px 4px 6px 1px rgba(0, 0, 0, 0.18);
-		border-radius: 5px;
-		font-size: 14px;
-		padding: 8px;
-		color: white;
-	}
-	&:nth-child(3) {
-		padding-bottom: 3px;
-	}
-	.invalid {
-		border-color: red;
-	}
-	.invMsg {
-		color: red;
-		font-size: smaller;
-		font-style: oblique;
-	}
-}
 .hintLink {
 	font-size: 14px;
-	padding-left: 27px;
 	padding-top: 3px;
 	color: #72767d;
 }
 
 .registerLink {
 	padding-top: 36px;
+}
+
+@media(min-width:1500px){
+	.loginForm{
+		height: 25em;
+	}
+}
+
+@media(max-width:1400px){
+	.loginForm{
+		height: 25em;
+	}
 }

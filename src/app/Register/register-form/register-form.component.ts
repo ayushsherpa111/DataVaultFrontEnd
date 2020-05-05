@@ -1,20 +1,12 @@
-import { lib } from "crypto-js";
+import { HttpHeaders } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { of } from "rxjs";
-import {
-	catchError,
-	debounceTime,
-	distinctUntilChanged,
-	map,
-	tap
-} from "rxjs/operators";
+import { catchError, debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { identityRevealedValidator } from "src/app/custom validators/passMatch";
 import { HttpService } from "src/app/Services/http-service.service";
 import { StorageService } from "src/app/Services/storage.service";
 import passwordSchema from "../../interfaces/strenght";
-import { HttpHeaders, HttpResponse } from "@angular/common/http";
-import { worker } from "cluster";
 @Component({
 	selector: "app-register-form",
 	templateUrl: "./register-form.component.html",
@@ -28,7 +20,9 @@ export class RegisterFormComponent implements OnInit {
 		digits: 0,
 		splChr: 0
 	};
+	userData: any;
 	hasSubmitted = false;
+	receiveMail = false;
 	strengthMeter = "100%";
 	strengthColor = "";
 	registerForm: FormGroup = this.formBuilder.group(
@@ -63,7 +57,7 @@ export class RegisterFormComponent implements OnInit {
 				this.isEmailTaken = true;
 				if (this.email.valid) {
 					this.http
-						.test1(e)
+						.checkEmail(e)
 						.pipe(
 							catchError(err => {
 								this.emailMessage = "Email is already in use.";
@@ -73,7 +67,6 @@ export class RegisterFormComponent implements OnInit {
 						.subscribe((res: any) => {
 							console.log(res);
 							if (res && res.msg === "valid") {
-								this.emailMessage = "GOOD";
 								this.isEmailTaken = false;
 								this.email.setErrors(null);
 							} else if (res && res.err) {
@@ -144,72 +137,75 @@ export class RegisterFormComponent implements OnInit {
 	}
 
 	computeStrength(pass: string) {
-		if (pass.length === 0) {
-			this.passwordScore.length = 0;
-			this.passwordScore.digits = 0;
-			this.passwordScore.letters = 0;
-			this.passwordScore.splChr = 0;
-			return;
-		}
+		if (pass) {
+			if (pass.length === 0) {
+				this.passwordScore.length = 0;
+				this.passwordScore.digits = 0;
+				this.passwordScore.letters = 0;
+				this.passwordScore.splChr = 0;
+				return;
+			}
 
-		if (pass.length <= 4 && pass.length > 0) {
-			this.passwordScore.length = 5;
-		} else if (pass.length >= 5 && pass.length <= 7) {
-			this.passwordScore.length = 10;
-		} else {
-			this.passwordScore.length = 25;
-		}
+			if (pass.length <= 4 && pass.length > 0) {
+				this.passwordScore.length = 5;
+			} else if (pass.length >= 5 && pass.length <= 7) {
+				this.passwordScore.length = 10;
+			} else {
+				this.passwordScore.length = 25;
+			}
 
-		// password entropy check
-		// letters
-		if (/^[a-z]+$/.test(pass) && pass.length > 0 && pass.length) {
-			this.passwordScore.letters = 10;
-		} else if (/^[a-zA-Z]+/.test(pass) && pass.length > 0 && pass.length) {
-			this.passwordScore.letters = 20;
-		} else {
-			this.passwordScore.letters = 0;
-		}
+			// password entropy check
+			// letters
+			if (/^[a-z]+$/.test(pass) && pass.length > 0 && pass.length) {
+				this.passwordScore.letters = 10;
+			} else if (/^[a-zA-Z]+/.test(pass) && pass.length > 0 && pass.length) {
+				this.passwordScore.letters = 20;
+			} else {
+				this.passwordScore.letters = 0;
+			}
 
-		// digits
-		const numCount = pass.match(/\d/g);
-		if (numCount === null) {
-			this.passwordScore.digits = 0;
-		} else if (numCount.length <= 1 && numCount.length > 0) {
-			this.passwordScore.digits = 10;
-		} else if (numCount.length >= 3) {
-			this.passwordScore.digits = 20;
-		}
+			// digits
+			const numCount = pass.match(/\d/g);
+			if (numCount === null) {
+				this.passwordScore.digits = 0;
+			} else if (numCount.length <= 1 && numCount.length > 0) {
+				this.passwordScore.digits = 10;
+			} else if (numCount.length >= 3) {
+				this.passwordScore.digits = 20;
+			}
 
-		// special characters
-		const spclChrs = pass.match(/\W/g);
-		if (spclChrs === null) {
-			this.passwordScore.splChr = 0;
-		} else if (spclChrs.length === 1) {
-			this.passwordScore.splChr = 10;
-		} else {
-			this.passwordScore.splChr = 25;
+			// special characters
+			const spclChrs = pass.match(/\W/g);
+			if (spclChrs === null) {
+				this.passwordScore.splChr = 0;
+			} else if (spclChrs.length === 1) {
+				this.passwordScore.splChr = 10;
+			} else {
+				this.passwordScore.splChr = 25;
+			}
 		}
 	}
 
 	registerUser() {
 		this.registerForm.get("hint").clearValidators();
 		this.registerForm.markAsUntouched();
-		const userData = this.registerForm.getRawValue();
-		if (userData.hint === "") {
-			delete userData.hint;
+		this.userData = this.registerForm.getRawValue();
+		if (this.userData.hint === "") {
+			delete this.userData.hint;
 		}
 		if (this.TOS && this.registerForm.status !== "INVALID") {
 			this.hasSubmitted = true;
-			delete userData.confirmPass;
+			delete this.userData.confirmPass;
 			if (typeof Worker !== undefined) {
-				const authKeyWorker = new Worker("./auth-key.worker", {
+				const authKeyWorker = new Worker("../../worker/login-gen.worker", {
 					type: "module"
 				});
-				authKeyWorker.postMessage(userData.masterPassword + userData.email);
+				authKeyWorker.postMessage(
+					this.userData.masterPassword + this.userData.email
+				);
 				authKeyWorker.onmessage = e => {
-					const userCopy = { ...userData };
+					const userCopy = { ...this.userData };
 					userCopy.masterPassword = e.data;
-					console.log(userCopy);
 					const header = new HttpHeaders({
 						"Content-Type": "application/json"
 					});
@@ -222,6 +218,11 @@ export class RegisterFormComponent implements OnInit {
 						)
 						.subscribe(resp => {
 							this.hasSubmitted = false;
+							this.receiveMail = true;
+							this.registerForm.reset();
+							this.strengthMeter = "0";
+							this.strengthColor = "";
+							this.TOS = false;
 							console.log(resp);
 						});
 				};
@@ -231,7 +232,6 @@ export class RegisterFormComponent implements OnInit {
 			console.log("Please agree to the TOS");
 		}
 	}
-
 	revealPassword() {
 		if (this.fieldType === "password") {
 			this.fieldType = "text";

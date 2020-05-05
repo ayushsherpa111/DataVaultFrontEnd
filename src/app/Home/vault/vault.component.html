@@ -1,0 +1,232 @@
+<div class="vaultBody">
+	<div class="top">
+		<div
+			style="
+				display: flex;
+				justify-content: space-between;
+				margin-bottom: 1rem;
+			"
+		>
+			<h1 class="title">Vault</h1>
+			<div class="options">
+				<button (click)="changeLayout('grid')" [disabled]="layout == 'grid'">
+					<img src="assets/Images/grid.png" alt="" />
+				</button>
+				<button (click)="changeLayout('list')" [disabled]="layout == 'list'">
+					<img src="assets/Images/list.png" alt="" />
+				</button>
+				<div class="search">
+					<img src="assets/Images/search.png" alt="" srcset="" />
+					<input
+						type="text"
+						name="search"
+						id=""
+						placeholder="Search Vault...."
+					/>
+				</div>
+			</div>
+		</div>
+		<hr />
+	</div>
+	<div class="vaultData">
+		<div class="category" *ngFor="let i of VAULT | keyvalue">
+			<h1 class="title">{{ i.key }} ({{ i.value.length }})</h1>
+			<div
+				class="grid"
+				[ngClass]="{
+					grid: layout == 'grid' ? true : false,
+					list: layout == 'list' ? true : false
+				}"
+			>
+				<div
+					class="card"
+					[ngClass]="{
+						card: layout == 'grid' ? true : false,
+						pane: layout == 'list' ? true : false
+					}"
+					*ngFor="let cat of i.value"
+					(click)="layout == 'grid' && getPasswordDetails(cat)"
+				>
+					<img src="assets/Images/Domains/{{ cat.icon }}" alt="" srcset="" />
+					<div class="info" *ngIf="layout == 'grid'; else listBlock">
+						<p>{{ cat.domain }}</p>
+						<p>{{ cat.email }}</p>
+					</div>
+					<ng-template #listBlock>
+						<div class="info">
+							<div>
+								<span>Domain: </span>
+								<p>{{ cat.domain }}</p>
+							</div>
+							<div>
+								<span>Email: </span>
+								<p>{{ cat.email }}</p>
+							</div>
+							<div>
+								<span>URL: </span> <a href="{{ cat.url }}">{{ cat.url }}</a>
+							</div>
+							<div>
+								<span>Category: </span>
+								<p>{{ cat.category }}</p>
+							</div>
+							<div>
+								<span>Description: </span>
+								<p>
+									{{
+										cat.description
+											? cat.description
+											: "Description Not Provided"
+									}}
+								</p>
+							</div>
+						</div>
+						<div class="options">
+							<img
+								src="assets/Images/delete.png"
+								(click)="deleteEmit(cat.id)"
+								alt=""
+								srcset=""
+							/>
+							<img
+								src="assets/Images/details.png"
+								alt=""
+								srcset=""
+								(click)="getPasswordDetails(cat)"
+							/>
+							<img
+								src="assets/Images/sync.png"
+								(click)="syncEmit(cat)"
+								alt=""
+								srcset=""
+							/>
+						</div>
+					</ng-template>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div
+	class="cover"
+	*ngIf="getPass"
+	(click)="getPass = !getPass; eyeCon = true"
+></div>
+<div class="passwordDetails" *ngIf="getPass">
+	<div class="markup">
+		<div class="passDomain">
+			<img
+				src="assets/Images/Domains/{{ currentPass.icon }}"
+				alt=""
+				srcset=""
+			/>
+		</div>
+		<div class="details">
+			<p>Slack.com</p>
+			<img src="assets/Images/verif.png" alt="" srcset="" />
+		</div>
+		<img src="assets/Images/share.png" alt="" srcset="" class="share" />
+	</div>
+	<hr />
+	<div class="body">
+		<table>
+			<tbody>
+				<tr>
+					<td>
+						Email
+					</td>
+					<td>
+						{{ currentPass.email }}
+					</td>
+					<td>
+						<img
+							src="assets/Images/copy.png"
+							alt=""
+							(click)="copyToClip(currentPass.email)"
+						/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Username
+					</td>
+					<td>
+						{{ currentPass.username }}
+					</td>
+					<td>
+						<img
+							src="assets/Images/copy.png"
+							alt=""
+							(click)="copyToClip(currentPass.username)"
+						/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Password
+					</td>
+					<td>
+						{{ eyeCon ? "••••••••••" : currentPass.password }}
+					</td>
+					<td>
+						<img
+							src="assets/Images/copy.png"
+							alt=""
+							(click)="copyToClip(currentPass.password)"
+						/>
+					</td>
+					<td>
+						<img
+							src="assets/Images/{{ eyeCon ? 'open1.png' : 'close1.png' }}"
+							alt=""
+							(click)="toggleEye()"
+							class="eye"
+						/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Website
+					</td>
+					<td style="color: #79deff;">
+						{{ currentPass.url ? currentPass.url : "NOT PROVIDED" }}
+					</td>
+					<td *ngIf="currentPass.url">
+						<img
+							src="assets/Images/extern.png"
+							alt=""
+							(click)="goTo(currentPass.url)"
+							style="filter: invert(1);"
+						/>
+					</td>
+				</tr>
+				<tr>
+					<td>Category</td>
+					<td>{{ currentPass.category }}</td>
+				</tr>
+				<tr>
+					<td>Description</td>
+					<td>
+						{{
+							currentPass.description
+								? currentPass.description
+								: "Description Not Provided"
+						}}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="messageBlock" *ngIf="message && message.length !== 0">
+			{{ message }}
+		</div>
+		<div class="options">
+			<button class="del" (click)="deleteEmit(currentPass.id)">
+				<img src="assets/Images/delete.png" alt="" srcset="" />
+				Delete
+			</button>
+			<button class="regen" (click)="regenPass()">
+				<img src="assets/Images/regen.png" alt="" srcset="" />
+				Regenerate Password
+			</button>
+		</div>
+	</div>
+</div>

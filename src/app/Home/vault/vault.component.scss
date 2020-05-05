@@ -1,0 +1,348 @@
+@import "../../../main-styles.scss";
+
+.vaultBody {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	.top {
+		padding: 1rem 2rem;
+		display: flex;
+		flex-direction: column;
+		.title {
+			font-style: normal;
+			font-weight: 300;
+			font-size: 33px;
+		}
+		.options {
+			display: flex;
+			.search {
+				margin-left: 2rem;
+				display: flex;
+				width: 19rem;
+				img {
+					width: 2.1rem;
+					height: 2.1rem;
+					position: relative;
+					left: 37px;
+					margin: auto;
+				}
+				input[type="text"] {
+					color: white;
+					border-radius: 10px;
+					width: 100%;
+					padding: 10px 10px 10px 39px;
+					background: #252323d4;
+					border: 1px solid rgba(231, 231, 231, 0.76);
+				}
+			}
+			button {
+				border: none;
+				padding: 3px;
+				width: 3.8rem;
+				background-color: #202231;
+				transition: all 100ms ease;
+				img {
+					width: 2rem;
+				}
+				&:first-child {
+					border-top-left-radius: 3px;
+					border-bottom-left-radius: 3px;
+				}
+				&:nth-child(2) {
+					border-top-right-radius: 3px;
+					border-bottom-right-radius: 3px;
+				}
+				&:disabled {
+					background-color: #323232;
+					box-shadow: 1px 4px 10px black;
+				}
+				&:hover {
+					cursor: pointer;
+				}
+			}
+		}
+	}
+
+	.vaultData {
+		overflow: auto;
+		padding: 1rem 2rem;
+
+		.category {
+			margin-bottom: 1rem;
+			.title {
+				font-size: 1.4rem;
+				letter-spacing: 0.2rem;
+				text-transform: uppercase;
+				font-weight: 600;
+				margin-bottom: 1rem;
+			}
+		}
+		.grid {
+			display: grid;
+			grid-template-columns: repeat(5, 11rem);
+			gap: 3rem;
+		}
+		.list {
+			display: flex;
+			flex-direction: column;
+		}
+		.card {
+			// background: linear-gradient(
+			// 	132.27deg,
+			// 	#589af3 2.05%,
+			// 	rgba(49, 115, 255, 0.9) 100%
+			// );
+			background: linear-gradient(
+				132.27deg,
+				#7d8ba5 2.05%,
+				rgba(91, 105, 131, 0.79) 100%
+			);
+			color: white;
+			display: flex;
+			flex-direction: column;
+			height: 11rem;
+			border-radius: 8px;
+			align-items: center;
+			transition: all 200ms ease;
+			.info {
+				margin-top: 0.5rem;
+			}
+			img {
+				margin-bottom: 0.5rem;
+				width: 6rem;
+				// background: white;
+				margin-top: 0.5rem;
+			}
+			p {
+				text-overflow: ellipsis;
+				overflow: hidden;
+				width: 9rem;
+				text-align: center;
+				height: 1.2em;
+				white-space: nowrap;
+			}
+
+			&:hover {
+				cursor: pointer;
+				box-shadow: 1px 1px 15px #8994fc80;
+			}
+		}
+		.pane {
+			width: 100%;
+			margin-bottom: 1rem;
+			display: flex;
+			border-bottom: 1px solid white;
+			color: white;
+			img {
+				width: 10rem;
+				height: 10rem;
+			}
+			.info {
+				padding-top: 1rem;
+				display: flex;
+				flex-direction: column;
+				div {
+					display: flex;
+					span {
+						margin-right: 1rem;
+					}
+					a {
+						color: #00f633;
+					}
+				}
+			}
+			.options {
+				margin-left: auto;
+				margin-right: 3rem;
+				display: flex;
+				flex-direction: column;
+				margin-bottom: 1rem;
+				img {
+					width: 3rem;
+					height: 3rem;
+					transition: all 200ms ease-out;
+					margin-bottom: 0.2rem;
+					&:hover {
+						cursor: pointer;
+						transform: scale(1.1);
+					}
+				}
+			}
+		}
+	}
+}
+.cover {
+	background-color: #363940;
+	position: absolute;
+	filter: opacity(0.8);
+	top: 0%;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	animation: fadeIn 200ms ease-in;
+}
+.passwordDetails {
+	background-color: #212226;
+	width: 45rem;
+	position: absolute;
+	top: 20%;
+	color: white;
+	border-radius: 8px;
+	left: 50%;
+	padding: 1rem;
+	transform: translate(-50%, -17%);
+	animation: fadeIn 200ms ease-in;
+	hr {
+		border: 0.1px solid #606163;
+	}
+	.share {
+		width: 2.5rem;
+		margin-left: auto;
+		height: 2.5rem;
+	}
+	.markup {
+		width: 100%;
+		display: flex;
+		margin-bottom: 0.5rem;
+		.passDomain {
+			width: 21%;
+			padding: 0.5rem;
+			text-align: center;
+			background-color: #611f69;
+			text-align: center;
+			img {
+				width: 5.1rem;
+			}
+		}
+		.details {
+			margin-left: 1rem;
+			p {
+				font-size: 2rem;
+				text-transform: lowercase;
+			}
+			img {
+				width: 2rem;
+			}
+		}
+	}
+	.body {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		table {
+			width: 72%;
+			margin: 0.3rem auto;
+			display: flex;
+			tr {
+				height: 2.5rem;
+			}
+			tr td:first-child {
+				width: 8rem;
+				text-align: right;
+				margin-right: 4rem;
+				text-transform: uppercase;
+				letter-spacing: 0.1rem;
+			}
+			tr:nth-child(3) {
+				height: 4rem;
+			}
+			tr:nth-child(4) {
+				height: 3rem;
+			}
+			tr td:nth-child(2) {
+				padding: 0 0.1rem 0 3rem;
+			}
+			img {
+				width: 1.9rem;
+				margin-left: 2rem;
+				transition: all 500ms ease;
+				&:hover {
+					cursor: pointer;
+					transform: scale(1.1);
+				}
+			}
+			.eye {
+				margin-left: 1rem;
+				width: 2.2rem;
+				&:hover {
+					cursor: pointer;
+				}
+			}
+			&:first-child {
+				margin-top: 1rem;
+			}
+		}
+		.messageBlock {
+			text-align: center;
+			text-transform: uppercase;
+			margin: 1.5rem 0;
+			letter-spacing: 0.4rem;
+			color: #6cdafe;
+			font-weight: 700;
+			font-size: 1.1rem;
+		}
+		.options {
+			margin-top: 1rem;
+			margin-bottom: 0.3rem;
+			padding: 0 1rem;
+			display: flex;
+			button {
+				background-color: transparent;
+				border: none;
+				display: flex;
+				font-size: 1.3rem;
+				align-items: center;
+				img {
+					width: 2.5rem;
+				}
+				&:hover {
+					cursor: pointer;
+				}
+			}
+
+			.regen {
+				color: white;
+				margin-left: auto;
+				img {
+					margin-right: 0.2rem;
+				}
+			}
+
+			.del {
+				color: red;
+				transition: all 200ms ease;
+				&:hover {
+					font-size: 1.5rem;
+				}
+			}
+		}
+	}
+}
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+@media screen and (min-width: 1560px) {
+	.vaultBody {
+		.vaultData {
+			.grid {
+				grid-template-columns: repeat(7, 11rem);
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 1550px) {
+	.vaultBody {
+		.vaultData {
+			.grid {
+				grid-template-columns: repeat(6, 11rem);
+			}
+		}
+	}
+}

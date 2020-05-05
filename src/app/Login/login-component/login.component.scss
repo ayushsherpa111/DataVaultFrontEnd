@@ -7,7 +7,7 @@
 }
 app-login-form {
 	position: absolute;
-	// left: 500px;
+	left: 57vw;
 }
 .title {
 	margin: 25px 0 0 25px;
@@ -15,12 +15,12 @@ app-login-form {
 }
 .sideBanner {
 	width: 143px;
-	// height: 100%;
+	height: 100vh;
 	background-image: url($vaultIconBackground);
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: cover;
-	background-position-x: -332px;
+	background-position-x: 48%;
 }
 .blur {
 	filter: blur(2px);
@@ -42,4 +42,26 @@ app-login-form {
 	width: 100vw;
 	height: 100vh;
 	text-align: center;
+	animation: comeIn 500ms ease-out 120ms;
+}
+
+@keyframes comeIn {
+	from {
+		visibility: hidden;
+	}
+	to {
+		visibility: visible;
+	}
+}
+
+@media (max-width: 1400px) {
+	app-login-form {
+		left: 52vw;
+	}
+}
+
+@media (min-width: 1500px) {
+	app-login-form {
+		left: 57vw;
+	}
 }

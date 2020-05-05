@@ -3,11 +3,11 @@ import {
 	FormGroup,
 	ValidationErrors,
 	AsyncValidatorFn,
-	AbstractControl
+	AbstractControl,
 } from "@angular/forms";
 import { HttpService } from "../Services/http-service.service";
 import { Observable, of } from "rxjs";
-import { map, tap, catchError, debounceTime } from "rxjs/operators";
+import { map, tap, catchError } from "rxjs/operators";
 
 export const identityRevealedValidator: ValidatorFn = (
 	control: FormGroup
@@ -27,7 +27,7 @@ export function uniqueEmail(http: HttpService): AsyncValidatorFn {
 		if (ctr.pending) {
 			return Promise.resolve({ e: "STill tyyping" });
 		}
-		return http.test1(ctr.value).pipe(
+		return http.checkEmail(ctr.value).pipe(
 			tap((e: any) => {
 				console.log(e);
 			}),
@@ -38,7 +38,7 @@ export function uniqueEmail(http: HttpService): AsyncValidatorFn {
 					return null;
 				}
 			}),
-			catchError(e => of(e))
+			catchError((e) => of(e))
 		);
 	};
 }

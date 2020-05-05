@@ -1,20 +1,21 @@
-import { Component, OnInit, Output } from "@angular/core";
+import { StorageService } from "./../../Services/storage.service";
+import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { EventEmitter } from "protractor";
 @Component({
 	selector: "app-login",
 	templateUrl: "./login.component.html",
 	styleUrls: ["./login.component.scss"],
-	providers: []
+	providers: [],
 })
 export class LoginComponent implements OnInit {
 	isLoading = false;
 
-	constructor(private route: Router) {}
+	constructor(private route: Router, private store: StorageService) {}
 
-	height: string = window.innerHeight + "px";
-	formPosition: string = window.innerWidth - 690 + "px";
 	ngOnInit() {
+		if (this.store.isLoggedIn()) {
+			this.route.navigate(["home"]);
+		}
 		console.log("Login Component initialized");
 	}
 

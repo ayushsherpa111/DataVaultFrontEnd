@@ -1,0 +1,97 @@
+@import "../../../main-styles.scss";
+
+.welcomeDiv {
+	color: white;
+	padding: 3rem;
+	display: flex;
+	justify-content: space-between;
+
+	.subtitle {
+		font-size: 1rem;
+	}
+	.info {
+		width: 35%;
+		// transform: perspective(1.1cm) rotateY(-10deg);
+		perspective: 1000px;
+		height: 234px;
+	}
+	.glass-card {
+		background: linear-gradient(
+			176deg,
+			rgba(117, 119, 122, 0.9951330874146533) 27%,
+			rgba(0, 0, 0, 1) 96%
+		);
+		padding: 1rem;
+		margin-bottom: 1rem;
+		border-bottom: 4px solid rgba(0, 0, 0, 0.65);
+		display: flex;
+		align-items: center;
+		border-radius: 8px;
+		position: absolute;
+		width: 96%;
+		transition: all 500ms ease;
+		transform: rotateY(-20deg) rotateX(15deg);
+
+		&:nth-child(1) {
+			z-index: 2;
+			top: 0;
+		}
+
+		&:nth-child(2) {
+			z-index: 1;
+			top: 33%;
+		}
+
+		&:nth-child(3) {
+			top: 68%;
+		}
+		&:hover {
+			cursor: pointer;
+			z-index: 3 !important;
+			transform: rotateY(0) rotateX(0);
+		}
+		.ico {
+			margin-right: 5px;
+			img {
+				width: 3rem;
+			}
+		}
+	}
+
+	.msg {
+		display: flex;
+		flex-direction: column;
+		.getStarted {
+			margin-top: 15px;
+			display: flex;
+			flex-direction: column;
+
+			button {
+				width: 8.5rem;
+				margin-top: 18px;
+				border-radius: 7px;
+				display: flex;
+				height: 4rem;
+				align-items: center;
+				padding: 9px;
+				border: none;
+				font-size: 1.1rem;
+				font-weight: 900;
+				text-transform: uppercase;
+				transition: all 200ms ease-out;
+				img {
+					width: 3rem;
+					height: 3rem;
+					margin-right: 10px;
+				}
+				&:hover {
+					cursor: pointer;
+					transform: scale(1.09);
+				}
+				&:active {
+					transform: scale(1);
+				}
+			}
+		}
+	}
+}

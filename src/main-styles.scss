@@ -3,10 +3,17 @@
 $nunito: "Nunito", sans-serif;
 $background: #202225;
 $overlay: #36393f;
+$iconBG: #36393f;
 $link: #93cbfe;
-$primaryBtn: #4963c1;
-$vaultIconBackground: "../../../assets/Images/Vault.png";
-$vaultIconBackgroundZOOM: "../../../assets/Images/Capture.png";
+$topBarHeight: 20px;
+$primaryBtn: linear-gradient(
+	180deg,
+	#0a2d8a 0%,
+	#001d6b 51.04%,
+	rgba(32, 17, 134, 0.53) 100%,
+	rgba(14, 35, 91, 0.92) 100%
+);
+$vaultIconBackground: "../../../assets/Images/Vault.svg";
 
 .container {
 	width: 100%;
@@ -38,7 +45,13 @@ a:hover {
 }
 .primary {
 	color: white;
-	background-color: $primaryBtn;
+	background: linear-gradient(
+		180deg,
+		#0a2d8a 0%,
+		#001d6b 51.04%,
+		rgba(32, 17, 134, 0.53) 100%,
+		rgba(14, 35, 91, 0.92) 100%
+	);
 }
 .grad {
 	color: white;
@@ -50,7 +63,86 @@ a:hover {
 		rgba(14, 35, 91, 0.92) 100%
 	);
 }
-input:focus,
-button:focus {
-	outline: none;
+.success {
+	background-color: #0a3584;
+	color: white;
+}
+.danger {
+	background-color: red;
+	color: white;
+}
+
+.formGroup {
+	display: flex;
+	flex-direction: column;
+	padding: 9px 3px;
+	padding-bottom: 4px;
+	label {
+		padding-bottom: 3px;
+		font-size: 15px;
+		font-weight: 300;
+		margin-bottom: 2px;
+	}
+	input,
+	select {
+		height: 47px;
+		background: #1a1c1f;
+		border: 1px solid #000000;
+		box-sizing: border-box;
+		box-shadow: inset 0px 4px 6px 1px rgba(0, 0, 0, 0.18);
+		border-radius: 5px;
+		font-size: 14px;
+		padding: 8px;
+		color: white;
+	}
+	textarea {
+		background: #1a1c1f;
+		border: 1px solid #000000;
+		box-sizing: border-box;
+		box-shadow: inset 0px 4px 6px 1px rgba(0, 0, 0, 0.18);
+		border-radius: 5px;
+		font-size: 14px;
+		padding: 8px;
+		color: white;
+	}
+	&:nth-child(3) {
+		padding-bottom: 3px;
+	}
+	.invalid {
+		border-color: red;
+	}
+	.invMsg {
+		color: red;
+		font-size: smaller;
+		font-style: oblique;
+	}
+}
+
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: #888;
+	border-radius: 8px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: #555;
+	cursor: pointer;
+}
+.title {
+	font-size: 3rem;
+	font-weight: 100;
+	color: white;
+}
+hr {
+	border: 0.5px solid white;
 }

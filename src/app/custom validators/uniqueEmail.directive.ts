@@ -24,7 +24,7 @@ export class UniqueEmailDirective implements AsyncValidator {
 		control: AbstractControl
 	): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
 		console.log(control);
-		return this.http.test1(control.value).pipe(
+		return this.http.checkEmail(control.value).pipe(
 			debounceTime(500),
 			map((e: any) => (e.email && e.email.length > 0 ? null : { e: "pass" }))
 		);
