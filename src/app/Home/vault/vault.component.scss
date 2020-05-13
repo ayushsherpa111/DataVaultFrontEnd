@@ -107,6 +107,9 @@
 			transition: all 200ms ease;
 			.info {
 				margin-top: 0.5rem;
+				div a:hover {
+					cursor: pointer;
+				}
 			}
 			img {
 				margin-bottom: 0.5rem;
@@ -142,8 +145,10 @@
 				padding-top: 1rem;
 				display: flex;
 				flex-direction: column;
+
 				div {
 					display: flex;
+					margin-bottom: 0.6rem;
 					span {
 						margin-right: 1rem;
 					}
@@ -163,11 +168,35 @@
 					height: 3rem;
 					transition: all 200ms ease-out;
 					margin-bottom: 0.2rem;
+					margin-left: auto;
 					&:hover {
 						cursor: pointer;
 						transform: scale(1.1);
 					}
 				}
+				.safety {
+					display: flex;
+					align-items: center;
+					&:hover {
+						cursor: pointer;
+					}
+				}
+			}
+		}
+		.emptiness {
+			font-size: 1.1rem;
+			color: white;
+			padding-top: 2rem;
+			text-align: center;
+			height: 76vh;
+			background-repeat: no-repeat;
+			background-size: 31rem;
+			background-position: 50% 0rem;
+			background-image: url("../../../assets/Images/empty.png");
+			h1 {
+				text-transform: uppercase;
+				font-weight: 100;
+				letter-spacing: 0.5rem;
 			}
 		}
 	}
@@ -219,10 +248,18 @@
 			margin-left: 1rem;
 			p {
 				font-size: 2rem;
-				text-transform: lowercase;
+				text-transform: capitalize;
+				margin-bottom: 0.4rem;
 			}
 			img {
 				width: 2rem;
+			}
+			.safety {
+				display: flex;
+				align-items: center;
+				&:hover {
+					cursor: pointer;
+				}
 			}
 		}
 	}
@@ -290,30 +327,27 @@
 			button {
 				background-color: transparent;
 				border: none;
+				transition: all 200ms ease;
 				display: flex;
 				font-size: 1.3rem;
 				align-items: center;
 				img {
-					width: 2.5rem;
+					width: 2rem;
 				}
 				&:hover {
 					cursor: pointer;
-				}
-			}
-
-			.regen {
-				color: white;
-				margin-left: auto;
-				img {
-					margin-right: 0.2rem;
+					font-size: 1.1rem;
 				}
 			}
 
 			.del {
 				color: red;
-				transition: all 200ms ease;
-				&:hover {
-					font-size: 1.5rem;
+			}
+			.sync {
+				color: #ff8b00;
+				margin-left: 2rem;
+				img {
+					margin-right: 0.2rem;
 				}
 			}
 		}
@@ -345,4 +379,46 @@
 			}
 		}
 	}
+}
+
+[data-tooltip]::after {
+	visibility: hidden;
+	opacity: 0;
+	content: attr(data-tooltip);
+	font-size: 1rem;
+	margin-left: 0.5rem;
+	background: black;
+	padding: 0.5rem;
+	border-radius: 8px;
+	text-transform: capitalize;
+	box-shadow: 2px 3px 11px #6a686730;
+	transform: translateX(-50px);
+	transition: opacity 0.3s, transform 0.2s;
+}
+[data-tooltip]:hover::after {
+	visibility: visible;
+	opacity: 1;
+	transform: translateX(0);
+	cursor: pointer;
+}
+
+[data-tooltips]::before {
+	visibility: hidden;
+	opacity: 0;
+	content: attr(data-tooltips);
+	font-size: 1rem;
+	margin-left: 0.5rem;
+	background: black;
+	padding: 0.5rem;
+	border-radius: 8px;
+	text-transform: capitalize;
+	box-shadow: 2px 3px 11px #6a686730;
+	transform: translateX(50px);
+	transition: opacity 0.3s, transform 0.2s;
+}
+[data-tooltips]:hover::before {
+	visibility: visible;
+	opacity: 1;
+	transform: translateX(-5px);
+	cursor: pointer;
 }

@@ -1,3 +1,4 @@
+import { JwtHelperService } from "@auth0/angular-jwt";
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
 
@@ -6,6 +7,7 @@ import { Subject } from "rxjs";
 })
 export class StorageService {
 	constructor() {}
+	jwt = new JwtHelperService();
 	vaultDecSub = new Subject();
 	vaultObservable = this.vaultDecSub.asObservable();
 	storeIn(key: string, value: string) {
@@ -31,13 +33,19 @@ export class StorageService {
 		this.storeIn("Vault", JSON.stringify(vLabel));
 	}
 
-	encryptData(data: string) {}
-
 	isLoggedIn(): boolean {
-		if (localStorage.getItem("X-ACCESS-TOKEN") === null) {
+		if (this.jwt.isTokenExpired(localStorage.getItem("X-REFRESH-TOKEN"))) {
 			return false;
 		} else {
 			return true;
 		}
+	}
+
+	getLoggedInUser() {
+		const token = this.getItem("X-ACCESS-TOKEN");
+		if (token) {
+			return this.jwt.decodeToken(token);
+		}
+		return false;
 	}
 }

@@ -95,3 +95,121 @@
 		}
 	}
 }
+
+.importOptions {
+	margin-top: 3rem;
+	padding: 1rem 3rem;
+	display: flex;
+	.import {
+		background-color: #3d73dd;
+		border-radius: 26px;
+		padding: 1rem 1.5rem;
+		width: 24%;
+		box-shadow: inset 0px 7px 14px #00000047;
+		&:last-child {
+			margin-left: 2rem;
+			background-color: #cc4f25;
+		}
+		.imgIco {
+			justify-content: center;
+			display: flex;
+			position: absolute;
+			background: white;
+			height: 5rem;
+			border-radius: 50%;
+			width: 5rem;
+			align-items: center;
+			top: 23rem;
+			left: 12rem;
+			box-shadow: 2px 7px 11px #121213;
+			img {
+				width: 3.2rem;
+				height: 3.2rem;
+			}
+		}
+		.imgIco2 {
+			left: 37rem;
+		}
+		.contents {
+			margin-top: 1.6rem;
+			text-align: center;
+			h1 {
+				color: white;
+				text-transform: capitalize;
+				font-weight: 100;
+				font-size: 1.4rem;
+			}
+			.options {
+				margin-top: 1.1rem;
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+				button:first-child {
+					margin-right: 1.5rem;
+				}
+				button {
+					border: none;
+					background-color: #265abf;
+					border-radius: 12px;
+					padding: 0.8rem;
+					img {
+						width: 3rem;
+						filter: grayscale(1);
+						transition: all 250ms ease;
+					}
+					&:hover {
+						cursor: pointer;
+					}
+					&:hover img {
+						filter: grayscale(0);
+						transform: scale(1.1);
+					}
+				}
+				.info {
+					color: white;
+					background-color: #a13714;
+					padding: 0.7rem 1.5rem;
+					border-radius: 14px;
+					display: flex;
+					p:first-child {
+						text-transform: uppercase;
+						letter-spacing: 0.1rem;
+						margin-right: 1.5rem;
+					}
+					p:last-child {
+						font-size: 1.9rem;
+					}
+					&:first-child {
+						margin-right: 1rem;
+					}
+					&:last-child {
+						margin-top: 0.5rem;
+					}
+				}
+			}
+			.stats {
+				margin-top: 0.1rem;
+				width: 100%;
+				text-align: left;
+				display: flex;
+				font-size: 1.1rem;
+				span {
+					color: white;
+					margin-right: 0.2rem;
+				}
+				p {
+					font-weight: 900;
+					margin-left: 0.5rem;
+				}
+			}
+		}
+		&:last-child {
+			width: 28%;
+		}
+	}
+}
+@media (max-width: 1400px) {
+	.importOptions .import .contents .options .info {
+		padding: 0.5rem 0.5rem;
+	}
+}

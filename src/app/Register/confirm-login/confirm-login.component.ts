@@ -52,7 +52,7 @@ import { of } from "rxjs";
 		</div>
 	`,
 
-	styleUrls: ["./confirm-login.component.scss"]
+	styleUrls: ["./confirm-login.component.scss"],
 })
 export class ConfirmLoginComponent implements OnInit {
 	jwt = new JwtHelperService();
@@ -69,14 +69,16 @@ export class ConfirmLoginComponent implements OnInit {
 		private route: Router
 	) {}
 	ngOnInit() {
-		this.actRoute.params.subscribe(param => {
+		this.actRoute.params.subscribe((param) => {
 			try {
 				this.token = param.token;
+				console.log(this.token);
 				if (this.token && !this.jwt.isTokenExpired(this.token)) {
 					this.http
 						.postEndPoint({ token: this.token }, "signup", "activate")
 						.pipe(
-							catchError(e => {
+							catchError((e) => {
+								console.log("errro");
 								this.valid = false;
 								this.image = this.postImage[1];
 								return of("Token is invalid");
@@ -84,10 +86,8 @@ export class ConfirmLoginComponent implements OnInit {
 						)
 						.subscribe((e: any) => {
 							console.log(e);
-							if (e && e.message) {
-								this.valid = true;
-								this.image = this.postImage[0];
-							}
+							this.valid = true;
+							this.image = this.postImage[0];
 						});
 				} else {
 					console.log("TOKEN BAD");
@@ -102,7 +102,7 @@ export class ConfirmLoginComponent implements OnInit {
 		});
 	}
 	goToLogin() {
-		this.route.navigateByUrl("/login").then(e => {
+		this.route.navigateByUrl("/login").then((e) => {
 			console.log("Navigating to home");
 		});
 	}
@@ -111,7 +111,7 @@ export class ConfirmLoginComponent implements OnInit {
 			this.emailValid = false;
 			this.http
 				.postEndPoint({ email: this.email }, "signup", "resend")
-				.subscribe((e: { [key: string]: string | number }) => {
+				.subscribe((e: any) => {
 					if (e.stat === 200) {
 						this.requestNewLink = true;
 					} else {

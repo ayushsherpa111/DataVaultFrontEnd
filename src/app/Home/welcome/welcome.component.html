@@ -4,10 +4,6 @@
 		<p class="subtitle">{{ data.email }}</p>
 		<div class="getStarted">
 			<span><strong>Start securing your data today.</strong></span>
-			<button (click)="getSome()">
-				<img src="assets/Images/cloud.png" alt="" />
-				Start
-			</button>
 		</div>
 	</div>
 	<div class="info">
@@ -31,6 +27,46 @@
 				<img src="assets/Images/doc.png" alt="" />
 			</div>
 			<p>Protect more than just your passwords.</p>
+		</div>
+	</div>
+</div>
+<div class="importOptions">
+	<div class="import">
+		<div class="imgIco">
+			<img src="assets/Images/upDoc.png" alt="" srcset="" />
+		</div>
+		<div class="contents">
+			<h1>Import your existing password</h1>
+			<div class="options">
+				<button (click)="openFile('json')">
+					<img src="assets/Images/json.png" alt="" />
+				</button>
+				<button (click)="openFile('csv')">
+					<img src="assets/Images/csv.png" alt="" />
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class="import">
+		<div class="imgIco imgIco2">
+			<img src="assets/Images/stat.png" alt="" srcset="" />
+		</div>
+		<div class="contents">
+			<h1 style="margin-bottom: 1rem;">Your statistics</h1>
+			<div class="options">
+				<div class="info">
+					<p>Total</p>
+					<p>{{ VAULT.length }}</p>
+				</div>
+				<div class="info">
+					<p>Safe</p>
+					<p>{{ VAULT | json | filterVault: true }}</p>
+				</div>
+				<div class="info">
+					<p>Unsafe</p>
+					<p>{{ VAULT | json | filterVault: false }}</p>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

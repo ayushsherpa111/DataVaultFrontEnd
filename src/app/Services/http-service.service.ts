@@ -1,25 +1,34 @@
-import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
+import {
+	HttpClient,
+	HttpHeaders,
+	HttpResponse,
+	HttpBackend,
+} from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { of } from "rxjs";
+import { catchError, tap } from "rxjs/operators";
 import { environment } from "src/environments/environment";
 import { User } from "./../interfaces/user";
 import { AuthService } from "./auth.service";
-import { KeyGenService } from "./keyGen.service";
-import { tap, catchError } from "rxjs/operators";
 import { StorageService } from "./storage.service";
-import { of } from "rxjs";
 
 @Injectable({
 	providedIn: "root",
 })
 export class HttpService {
+	authHttp: HttpClient;
 	constructor(
 		private authService: AuthService,
 		private storageService: StorageService,
-		private http: HttpClient
-	) {}
+		private http: HttpClient,
+		handler: HttpBackend
+	) {
+		this.authHttp = new HttpClient(handler);
+		console.log(this.authHttp);
+	}
 
 	login(user: User) {
-		return this.http
+		return this.authHttp
 			.post(`${environment.serverRoute}/login`, user, { observe: "response" })
 			.pipe(
 				tap((e) => {
@@ -36,7 +45,7 @@ export class HttpService {
 	}
 
 	register(user: User, header: HttpHeaders) {
-		return this.http.post(`${environment.serverRoute}/signup`, user, {
+		return this.authHttp.post(`${environment.serverRoute}/signup`, user, {
 			headers: header,
 			responseType: "json",
 		});

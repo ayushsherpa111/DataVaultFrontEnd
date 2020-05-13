@@ -1,0 +1,177 @@
+<div class="statistics">
+	<div class="stats">
+		<div class="barStat">
+			<h1>
+				Password Bar Chart
+			</h1>
+			<p>
+				Bar Graph representation of Secure and Insecure passwords based on
+				category.
+			</p>
+			<hr />
+			<canvas id="barChart">
+				{{ barChart }}
+			</canvas>
+		</div>
+		<div class="barStat" style="width: 25rem;">
+			<h1>
+				Password Pie Chart
+			</h1>
+			<p>Distribution of all your passwords based on categories.</p>
+			<hr />
+			<canvas id="pieChart" width="368" height="272">
+				{{ pieChart }}
+			</canvas>
+		</div>
+		<div
+			class="barStat"
+			style="
+				width: 16rem;
+				margin-right: 0.5rem;
+				display: flex;
+				flex-direction: column;
+			"
+		>
+			<h1>
+				Password Overview
+			</h1>
+			<p>A summary of your passwords.</p>
+			<hr />
+			<div class="overview">
+				<div class="feedBack">
+					<p class="ss">
+						Total Passwords:
+					</p>
+					<p class="count">
+						{{ overView.secure + overView.insecure }}
+					</p>
+				</div>
+				<div class="feedBack">
+					<p class="ss">
+						Number of Reused Password:
+					</p>
+					<p class="count">
+						{{ overView.reused }}
+					</p>
+				</div>
+				<div class="feedBack">
+					<p class="ss">
+						Secure Passwords:
+					</p>
+					<p class="count">
+						{{ overView.secure }}
+					</p>
+				</div>
+				<div class="feedBack">
+					<p class="ss">
+						Insecure Passwords:
+					</p>
+					<p class="count">
+						{{ overView.insecure }}
+					</p>
+				</div>
+				<div class="feedBack">
+					<p class="ss">
+						Overall Password health:
+					</p>
+					<p class="count">{{ health >= 0 ? health : 0 }}%</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tablePass">
+		<div class="header">
+			<p
+				[ngClass]="{ selected: selected === 'total' }"
+				(click)="changeCategory('total')"
+			>
+				All
+				<span class="total">
+					{{ overView.secure + overView.insecure }}
+				</span>
+			</p>
+			<p
+				[ngClass]="{ selected: selected === 'safe' }"
+				(click)="changeCategory('safe')"
+			>
+				Secure
+				<span class="safe">
+					{{ overView.secure }}
+				</span>
+			</p>
+			<p
+				[ngClass]="{ selected: selected === 'unsafe' }"
+				(click)="changeCategory('unsafe')"
+			>
+				Insecure
+				<span class="unsafe" *ngIf="overView.insecure > 0">
+					{{ overView.insecure }}
+				</span>
+			</p>
+			<p
+				[ngClass]="{ selected: selected === 'reuse' }"
+				(click)="changeCategory('reuse')"
+			>
+				Reused
+				<span class="reuse" *ngIf="overView.reused > 0">
+					{{ overView.reused }}
+				</span>
+			</p>
+		</div>
+		<hr />
+
+		<div class="details">
+			<table>
+				<thead>
+					<tr>
+						<th>Icon</th>
+						<th>Domain</th>
+						<th>Email</th>
+						<th>Category</th>
+						<th>URL</th>
+						<th>Health</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let pass of selection">
+						<td>
+							<img
+								src="assets/Images/Domains/{{ pass.icon }}"
+								alt=""
+								srcset=""
+							/>
+						</td>
+						<td>
+							{{ pass.domain }}
+						</td>
+						<td>
+							bepice2520@inbov03.com
+						</td>
+						<td>
+							{{ pass.category }}
+						</td>
+						<td>
+							<p>{{ pass.url }}</p>
+							<img src="assets/Images/extern.png" alt="" srcset="" />
+						</td>
+						<td>
+							<div class="battery">
+								<div class="top"></div>
+								<div *ngFor="let i of pass.score" [ngClass]="i"></div>
+							</div>
+						</td>
+						<td>
+							<button data-tooltip="Regenerate Password">
+								<img src="assets/Images/reset.png" alt="" srcset="" />
+							</button>
+							<button data-tooltip="BRUH">
+								<img src="assets/Images/add.png" alt="" srcset="" />
+							</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

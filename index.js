@@ -110,7 +110,9 @@ electron_1.ipcMain.handle("storePass", function (event, data) {
             password: data.password,
             username: data.username,
         });
-        data = __assign({}, data, encData);
+        var passScore = util_1.computeStrength(data.password);
+        console.log("Password Scroe %s", passScore);
+        data = __assign({}, data, encData, { secure: passScore >= 55 ? true : false, score: passScore });
         VAULT.push(data);
         util_1.storeTo(vaultPath, VAULT);
         console.log("Stored new PAssword");
@@ -120,6 +122,97 @@ electron_1.ipcMain.handle("storePass", function (event, data) {
         throw Error("key Missing");
     }
 });
+electron_1.ipcMain.handle("syncVault", function (channel, vaultObject) {
+    var passIndex = VAULT.findIndex(function (pass) { return pass.id === vaultObject; });
+    if (passIndex > -1) {
+        VAULT[passIndex].sync = true;
+        return "Synced " + vaultObject;
+    }
+    else {
+        throw Error("Couldnt sync");
+    }
+});
+// ipcMain.handle("testCSV", (event) => {
+// 	return encryptCSV("D:\\test\\pass.csv");
+// });
+electron_1.ipcMain.handle("loadFile", function (event, type) { return __awaiter(_this, void 0, void 0, function () {
+    var filter, file, payload, err_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                filter = void 0;
+                if (type === "json") {
+                    filter = { name: "JSON", extensions: ["json"] };
+                }
+                else {
+                    filter = { name: "CSV", extensions: ["csv"] };
+                }
+                return [4 /*yield*/, electron_1.dialog.showOpenDialog({
+                        title: "Select Password File",
+                        filters: [filter],
+                    })];
+            case 1:
+                file = _a.sent();
+                if (!file.canceled) {
+                    if (!USER.masterKey) {
+                        return [2 /*return*/, {
+                                status: false,
+                                path: file.filePaths[0],
+                            }];
+                    }
+                    else {
+                        // start encrypting
+                        if (type === "json") {
+                            payload = require(file.filePaths[0]);
+                            console.log(payload);
+                            VAULT.push.apply(VAULT, util_1.encryptJSON(payload, ENC_ALGO, USER.masterKey));
+                        }
+                        else {
+                            // store CSV
+                            return [2 /*return*/, util_1.encryptCSV(file.filePaths[0], ENC_ALGO, USER.masterkey)];
+                        }
+                        util_1.storeTo(vaultPath, VAULT);
+                        return [2 /*return*/, {
+                                status: true,
+                            }];
+                    }
+                }
+                return [3 /*break*/, 3];
+            case 2:
+                err_1 = _a.sent();
+                throw Error(err_1);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
+electron_1.ipcMain.handle("loadFileAgain", function (event, filePath) { return __awaiter(_this, void 0, void 0, function () {
+    var extension, payload, _a, _b, _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
+            case 0:
+                extension = path.extname(filePath);
+                console.log(extension);
+                console.log(filePath);
+                if (!(extension.toLowerCase() === ".json")) return [3 /*break*/, 1];
+                payload = require(filePath);
+                console.log(payload);
+                VAULT.push.apply(VAULT, util_1.encryptJSON(payload, ENC_ALGO, USER.masterKey));
+                return [3 /*break*/, 3];
+            case 1:
+                if (!(extension.toLowerCase() === ".csv")) return [3 /*break*/, 3];
+                _b = (_a = VAULT.push).apply;
+                _c = [VAULT];
+                return [4 /*yield*/, util_1.encryptCSV(filePath, ENC_ALGO, USER.masterKey)];
+            case 2:
+                _b.apply(_a, _c.concat([(_d.sent())]));
+                _d.label = 3;
+            case 3:
+                util_1.storeTo(vaultPath, VAULT);
+                return [2 /*return*/, { decData: true, newPass: "Bruh" }];
+        }
+    });
+}); });
 electron_1.ipcMain.handle("CHBS", function (event, options) {
     if (options) {
         console.log(options.word_count, options.min_length, options.separator, options.capitalize);
@@ -158,6 +251,7 @@ electron_1.ipcMain.handle("refreshKey", function (event, data) { return __awaite
                 return [4 /*yield*/, util_1.genKey(USER.authKey + data, "", parseInt(process.env.MASTERKEY, 10), 32, "sha512")];
             case 1:
                 key = _a.sent();
+                console.log("refereshed");
                 USER.masterKey = key;
                 return [2 /*return*/, true];
             case 2:
@@ -195,19 +289,21 @@ electron_1.ipcMain.handle("decrypt", function (_, data) {
         if (VAULT.length === 0) {
             VAULT = util_1.loadVault(vaultPath);
         }
-        var toUpdate = VAULT.find(function (pass) { return pass.iv === data.iv; });
-        if (toUpdate) {
-            var newPass = util_1.encryptData(ENC_ALGO, Buffer.from(USER.masterKey, "hex"), {
+        var toUpdate = VAULT.findIndex(function (pass) { return pass.id === data.id; });
+        console.log(toUpdate);
+        var newPass = void 0;
+        if (toUpdate > -1) {
+            newPass = util_1.encryptData(ENC_ALGO, Buffer.from(USER.masterKey, "hex"), {
                 username: decData.username,
                 password: decData.password,
             });
             console.log("Updated");
-            toUpdate = __assign({}, toUpdate, newPass);
+            VAULT[toUpdate] = __assign({}, VAULT[toUpdate], newPass);
             util_1.storeTo(vaultPath, VAULT);
         }
         console.log("Decrypted Data");
         console.log(decData);
-        return decData;
+        return { decData: decData, newPass: newPass };
     }
     else {
         console.log("Decrypt didnt workd");
@@ -223,6 +319,10 @@ electron_1.ipcMain.handle("goTo", function (e, data) { return __awaiter(_this, v
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
+                console.log(data);
+                if (!data.match(/^http[s]?\:\/\//)) {
+                    data = "https://" + data;
+                }
                 return [4 /*yield*/, electron_1.shell.openExternal(data)];
             case 2:
                 _a.sent();

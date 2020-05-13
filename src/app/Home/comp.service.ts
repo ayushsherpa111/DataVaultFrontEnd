@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { WelcomeComponent } from "./welcome/welcome.component";
 import { AddPasswordComponent } from "./addPassword/addPassword.component";
 import { PasswordGeneratorComponent } from "./passwordGenerator/passwordGenerator.component";
+import { AnalysisComponent } from "./analysis/analysis.component";
 
 @Injectable({
 	providedIn: "root",
@@ -16,6 +17,8 @@ export class CompService {
 			AddPasswordComponent,
 			VaultComponent,
 			PasswordGeneratorComponent,
+			null,
+			AnalysisComponent,
 		];
 	}
 }

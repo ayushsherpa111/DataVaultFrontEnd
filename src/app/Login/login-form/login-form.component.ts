@@ -69,7 +69,6 @@ export class LoginFormComponent implements OnInit {
 								"user",
 								JSON.stringify({ email: this.email.value })
 							);
-							this.displayLoading.emit(false);
 							this.authService.loginSubject.next({ email: this.email.value });
 							this.ngZone.run(() => {
 								this.route.navigate(["home"]);
@@ -77,9 +76,9 @@ export class LoginFormComponent implements OnInit {
 						} else {
 							this.email.setErrors({ notFound: true });
 							console.log("LoginFailed");
-							this.displayLoading.emit(false);
 							this.electronService.ipcRenderer.send("auth", false);
 						}
+						this.displayLoading.emit(false);
 					});
 			});
 		} else {

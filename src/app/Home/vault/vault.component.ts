@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { ElectronService } from "ngx-electron";
 import { StorageService } from "src/app/Services/storage.service";
+import { HttpService } from "src/app/Services/http-service.service";
+import { HttpResponse } from "@angular/common/http";
+
 @Component({
 	selector: "app-vault",
 	templateUrl: "./vault.component.html",
@@ -21,11 +24,16 @@ export class VaultComponent implements OnInit {
 	@Output() changeComp = new EventEmitter();
 	constructor(
 		private electron: ElectronService,
-		private storageService: StorageService
+		private storageService: StorageService,
+		private http: HttpService
 	) {
-		this.storageService.vaultObservable.subscribe((vault) => {
-			this.currentPass = vault;
+		this.storageService.vaultObservable.subscribe((vault: any) => {
+			this.currentPass = { ...vault.body, ...vault.main };
 			this.getPass = !this.getPass;
+			this.updateVault(vault.body.id, vault.body.category, {
+				...vault.body,
+				...vault.change,
+			});
 		});
 	}
 
@@ -40,6 +48,15 @@ export class VaultComponent implements OnInit {
 				this.message = "";
 				this.copied = !this.copied;
 			}, 1500);
+		}
+	}
+
+	updateVault(id: string, category: string, newPayload: any) {
+		console.log(newPayload);
+		if (this.VAULT[category]) {
+			this.VAULT[category][
+				this.VAULT[category].findIndex((pass) => pass.id === id)
+			] = newPayload;
 		}
 	}
 
@@ -71,21 +88,44 @@ export class VaultComponent implements OnInit {
 			}
 		}
 	}
+
 	syncEmit(elem: any) {
 		console.log(elem);
+		if (this.electron.isElectronApp) {
+			this.http.storeVault([elem]).subscribe((e: HttpResponse<any>) => {
+				console.log(e.body);
+				elem.sync = true;
+				this.electron.ipcRenderer
+					.invoke("syncVault", elem.id)
+					.then((reply) => {
+						console.log("Sync chg");
+						console.log(reply);
+					})
+					.catch((err) => {
+						console.error(err);
+					});
+			});
+		}
 	}
+
 	toggleEye() {
 		this.eyeCon = !this.eyeCon;
 	}
 	goTo(url: string) {
-		this.electron.ipcRenderer
-			.invoke("goTo", url)
-			.then((e) => {
-				console.log(e);
-			})
-			.catch((e) => {
-				console.log(e);
-			});
+		console.log(this.electron.isElectronApp);
+		if (this.electron.isElectronApp) {
+			console.log("Elec Open");
+			this.electron.ipcRenderer
+				.invoke("goTo", url)
+				.then((e) => {
+					console.log(e);
+				})
+				.catch((e) => {
+					console.log(e);
+				});
+		} else {
+			window.open(url);
+		}
 	}
 
 	getPasswordDetails(pass) {
@@ -93,10 +133,15 @@ export class VaultComponent implements OnInit {
 		if (this.electron.isElectronApp) {
 			this.electron.ipcRenderer
 				.invoke("decrypt", pass)
-				.then((res) => {
+				.then(({ decData, newPass }) => {
 					console.log("Desc replied");
-					console.log(res);
-					this.currentPass = { ...pass, ...res };
+					console.log(decData);
+					console.log(newPass);
+					this.currentPass = { ...pass, ...decData };
+					this.updateVault(pass.id, pass.category, {
+						...pass,
+						...newPass,
+					});
 					this.getPass = !this.getPass;
 				})
 				.catch((err) => {
@@ -111,8 +156,5 @@ export class VaultComponent implements OnInit {
 			this.currentPass = pass;
 			this.getPass = !this.getPass;
 		}
-	}
-	regenPass() {
-		this.changeComp.emit(3);
 	}
 }

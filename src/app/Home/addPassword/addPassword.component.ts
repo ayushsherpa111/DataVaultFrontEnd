@@ -38,7 +38,7 @@ export class AddPasswordComponent implements OnInit, DataComponent {
 		"Finance",
 		"Other",
 	];
-	data: User;
+	@Input() data: User;
 	changeSubject = new Subject<number>();
 	changeComp = this.changeSubject.asObservable();
 	passwordForm: FormGroup = this.fb.group({
@@ -70,10 +70,7 @@ export class AddPasswordComponent implements OnInit, DataComponent {
 
 	ngOnInit() {
 		console.log(v4());
-		this.authService.loginUser.subscribe((u) => {
-			this.data = u;
-			this.passwordForm.get("email").setValue(this.data.email);
-		});
+		this.passwordForm.get("email").setValue(this.data.email);
 	}
 
 	get password() {
@@ -130,7 +127,6 @@ export class AddPasswordComponent implements OnInit, DataComponent {
 		return encrypted;
 		// console.log(encrypted.toString());
 	}
-	
 }
 
 // const parse = this.authService.formatter.parse(encrypted.toString());

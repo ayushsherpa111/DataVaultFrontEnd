@@ -2,7 +2,7 @@ import { config } from "dotenv";
 import { app, BrowserWindow, dialog, ipcMain, screen, shell } from "electron";
 import * as path from "path";
 import * as url from "url";
-import { readFile, readFileSync } from "fs";
+import { readFileSync } from "fs";
 import {
 	exists,
 	genKey,
@@ -11,6 +11,9 @@ import {
 	encryptData,
 	decryptData,
 	CHBS,
+	computeStrength,
+	encryptJSON,
+	encryptCSV,
 } from "./utils/util";
 config();
 const ENC_ALGO = "aes-256-cbc";
@@ -73,7 +76,14 @@ ipcMain.handle("storePass", (event, data) => {
 			password: data.password,
 			username: data.username,
 		});
-		data = { ...data, ...encData };
+		const passScore = computeStrength(data.password);
+		console.log("Password Scroe %s", passScore);
+		data = {
+			...data,
+			...encData,
+			secure: passScore >= 55 ? true : false,
+			score: passScore,
+		};
 		VAULT.push(data);
 		storeTo(vaultPath, VAULT);
 		console.log("Stored new PAssword");
@@ -81,6 +91,76 @@ ipcMain.handle("storePass", (event, data) => {
 	} else {
 		throw Error("key Missing");
 	}
+});
+
+ipcMain.handle("syncVault", (channel, vaultObject) => {
+	const passIndex = VAULT.findIndex((pass) => pass.id === vaultObject);
+	if (passIndex > -1) {
+		VAULT[passIndex].sync = true;
+		return `Synced ${vaultObject}`;
+	} else {
+		throw Error("Couldnt sync");
+	}
+});
+
+// ipcMain.handle("testCSV", (event) => {
+// 	return encryptCSV("D:\\test\\pass.csv");
+// });
+
+ipcMain.handle("loadFile", async (event, type: "json" | "csv") => {
+	try {
+		let filter: { name: string; extensions: string[] };
+		if (type === "json") {
+			filter = { name: "JSON", extensions: ["json"] };
+		} else {
+			filter = { name: "CSV", extensions: ["csv"] };
+		}
+		const file = await dialog.showOpenDialog({
+			title: "Select Password File",
+			filters: [filter],
+		});
+		if (!file.canceled) {
+			if (!USER.masterKey) {
+				return {
+					status: false,
+					path: file.filePaths[0],
+				};
+			} else {
+				// start encrypting
+				if (type === "json") {
+					// store JSON
+					const payload = require(file.filePaths[0]);
+					console.log(payload);
+					VAULT.push(...encryptJSON(payload, ENC_ALGO, USER.masterKey));
+				} else {
+					// store CSV
+					return encryptCSV(file.filePaths[0], ENC_ALGO, USER.masterkey);
+				}
+				storeTo(vaultPath, VAULT);
+				return {
+					status: true,
+				};
+			}
+		}
+	} catch (err) {
+		throw Error(err);
+	}
+});
+
+ipcMain.handle("loadFileAgain", async (event, filePath: string) => {
+	const extension = path.extname(filePath);
+	console.log(extension);
+	console.log(filePath);
+	if (extension.toLowerCase() === ".json") {
+		// encrypt file
+		const payload = require(filePath);
+		console.log(payload);
+		VAULT.push(...encryptJSON(payload, ENC_ALGO, USER.masterKey));
+	} else if (extension.toLowerCase() === ".csv") {
+		VAULT.push(...(await encryptCSV(filePath, ENC_ALGO, USER.masterKey)));
+	}
+	storeTo(vaultPath, VAULT);
+	return { decData: true, newPass: "Bruh" };
 });
 
 ipcMain.handle("CHBS", (event, options) => {
@@ -135,6 +215,7 @@ ipcMain.handle("refreshKey", async (event, data) => {
 			32,
 			"sha512"
 		);
+		console.log("refereshed");
 		USER.masterKey = key;
 		return true;
 	} catch (e) {
@@ -182,32 +263,34 @@ ipcMain.handle("decrypt", (_, data) => {
 		if (VAULT.length === 0) {
 			VAULT = loadVault(vaultPath);
 		}
-		let toUpdate = VAULT.find((pass) => pass.iv === data.iv);
-		if (toUpdate) {
-			const newPass = encryptData(
-				ENC_ALGO,
-				Buffer.from(USER.masterKey, "hex"),
-				{
-					username: decData.username,
-					password: decData.password,
-				}
-			);
+		const toUpdate = VAULT.findIndex((pass) => pass.id === data.id);
+		console.log(toUpdate);
+		let newPass;
+		if (toUpdate > -1) {
+			newPass = encryptData(ENC_ALGO, Buffer.from(USER.masterKey, "hex"), {
+				username: decData.username,
+				password: decData.password,
+			});
 			console.log("Updated");
-			toUpdate = { ...toUpdate, ...newPass };
+			VAULT[toUpdate] = { ...VAULT[toUpdate], ...newPass };
 			storeTo(vaultPath, VAULT);
 		}
 		console.log("Decrypted Data");
 		console.log(decData);
-		return decData;
+		return { decData, newPass };
 	} else {
 		console.log("Decrypt didnt workd");
 		throw Error("Master Password Missing");
 	}
 });
 
-ipcMain.handle("goTo", async (e, data) => {
+ipcMain.handle("goTo", async (e, data: string) => {
 	if (data) {
 		try {
+			console.log(data);
+			if (!data.match(/^http[s]?\:\/\//)) {
+				data = "https://" + data;
+			}
 			await shell.openExternal(data);
 		} catch (e) {
 			throw Error("URL not available");

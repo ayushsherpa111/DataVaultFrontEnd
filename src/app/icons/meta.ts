@@ -46,6 +46,7 @@ export const MetaData = {
 		{ meta: ["oracle"], icon: "oracle.png" },
 		{ meta: ["onedrive"], icon: "onedrive.png" },
 		{ meta: ["dropbox"], icon: "dropbox.png" },
+		{ meta: ["mega", "mga"], icon: "mega.png" },
 		{ meta: ["drive", "gdrive", "googledrive"], icon: "drive.png" },
 	],
 	Communication: [
@@ -64,5 +65,5 @@ export const MetaData = {
 		{ meta: ["shopify"], icon: "shopify.png" },
 	],
 	Finance: [{ meta: ["paypal"], icon: "paypal.png" }],
-	Other: "other.png",
+	Other: [{ meta: ["other"], icon: "other.png" }],
 };

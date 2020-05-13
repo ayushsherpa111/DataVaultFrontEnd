@@ -17,12 +17,19 @@
 	<div class="content">
 		<!-- <app-welcome [data]="currUser"></app-welcome> -->
 		<ng-container *ngIf="childComponent == contents[0]">
-			<app-welcome [data]="currUser" (bruh)="logoutUser()"></app-welcome>
+			<app-welcome
+				[VAULT]="VAULT"
+				[data]="currUser"
+				(bruh)="logoutUser()"
+				(reEnterPrompt)="rePrompt($event)"
+				(viewVault)="loadComponent($event)"
+			></app-welcome>
 		</ng-container>
 		<ng-container *ngIf="childComponent == contents[1]">
 			<app-add-password
 				(viewVault)="loadComponent($event)"
 				(addPassword)="redoVault($event)"
+				[data]="currUser"
 				[hasRenter]="reEnterPrompt"
 				(reEnterPrompt)="rePrompt($event)"
 			></app-add-password>
@@ -37,6 +44,9 @@
 		</ng-container>
 		<ng-container *ngIf="childComponent == contents[3]">
 			<app-password-generator></app-password-generator>
+		</ng-container>
+		<ng-container *ngIf="childComponent == contents[5]">
+			<app-analysis [VAULT]="sortedVault" [unSorted]="VAULT"></app-analysis>
 		</ng-container>
 	</div>
 </div>

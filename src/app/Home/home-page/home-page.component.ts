@@ -1,3 +1,4 @@
+import { JwtHelperService } from "@auth0/angular-jwt";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { User } from "src/app/interfaces/user";
@@ -5,7 +6,6 @@ import { StorageService } from "src/app/Services/storage.service";
 import { CompService } from "../comp.service";
 import { AuthService } from "./../../Services/auth.service";
 import { ElectronService } from "ngx-electron";
-
 @Component({
 	selector: "app-home-page",
 	templateUrl: "./home-page.component.html",
@@ -13,6 +13,7 @@ import { ElectronService } from "ngx-electron";
 })
 export class HomePageComponent implements OnInit {
 	loggedIn: boolean;
+	jwt = new JwtHelperService();
 	VAULT: any[];
 	sortedVault: object;
 	contents = this.compGen.components;
@@ -62,6 +63,7 @@ export class HomePageComponent implements OnInit {
 			img: "chart.png",
 			width: "2.5rem",
 			click: "load",
+			load: 5,
 		},
 		{
 			img: "sync.png",
@@ -75,7 +77,7 @@ export class HomePageComponent implements OnInit {
 		},
 	];
 
-	rePrompt(val) {
+	rePrompt(val: any) {
 		console.log(val);
 		this.reEnterPrompt = val.boo;
 		this.encBody = val.body;
@@ -94,7 +96,6 @@ export class HomePageComponent implements OnInit {
 		if (!this.store.isLoggedIn()) {
 			this.route.navigate(["login"]);
 		} else {
-			console.log(this.currUser);
 			// this.getComponent();
 			console.log(this.contents);
 			if (this.electronService.isElectronApp) {
@@ -112,6 +113,9 @@ export class HomePageComponent implements OnInit {
 						description: null,
 						icon: "tumblr.png",
 						iv: "074c9a1255f9dc9a4cf054f88363a5f4",
+						secure: false,
+						hash: "123",
+						score: 55,
 					},
 					{
 						id: "74207a7a-bb23-43a8-892c-8a20998c8b18",
@@ -124,6 +128,9 @@ export class HomePageComponent implements OnInit {
 						description: null,
 						icon: "discord.png",
 						iv: "4f84763e0a89cb240c36299790b39bc4",
+						secure: true,
+						hash: "123",
+						score: 12,
 					},
 					{
 						id: "c6852ec8-f84d-496a-9985-3b08a69a1f1e",
@@ -131,11 +138,14 @@ export class HomePageComponent implements OnInit {
 						username: "366fbee5e838281f95bd1bb15767100d",
 						password: "32ffde822958be74618fb2c2ade5654d",
 						domain: "paypal",
-						url: "https://paypal.org",
+						url: "https://www.paypal.com",
 						category: "Finance",
 						description: null,
 						icon: "paypal.png",
 						iv: "94614bd3ec760ff8794355fbab6197d4",
+						secure: true,
+						hash: "1234",
+						score: 88,
 					},
 					{
 						id: "76d0cab8-3c87-4814-b0b0-de33cd824a8d",
@@ -143,11 +153,14 @@ export class HomePageComponent implements OnInit {
 						username: "170b27bf3532b01bcf7598f872d1f64b",
 						password: "cc7d139960edbf103f0a310eddfcbeb6",
 						domain: "slack",
-						url: "https://slack.net",
+						url: "https://slack.com",
 						category: "Communication",
 						description: null,
 						icon: "slack.png",
 						iv: "255cdf6dde58e8a718d5a4a8a73c36e9",
+						secure: false,
+						hash: "12343635",
+						score: 90,
 					},
 					{
 						id: "17248c3e-2283-488a-ab81-a3901e274223",
@@ -160,13 +173,17 @@ export class HomePageComponent implements OnInit {
 						description: null,
 						icon: "drive.png",
 						iv: "cb6e60e29f1065d81ac99ddbb20bf5ae",
+						secure: false,
+						hash: "12343635165",
+						score: 10,
 					},
 				];
 				this.sortedVault = this.sortVault(this.VAULT);
 			}
-			this.authService.loginUser.subscribe((user) => {
-				this.currUser = user;
-			});
+			this.currUser = this.store.getLoggedInUser();
+			if (this.currUser === null) {
+				this.logoutUser();
+			}
 		}
 	}
 
@@ -209,6 +226,7 @@ export class HomePageComponent implements OnInit {
 			console.log(this.VAULT);
 		}
 	}
+
 	sendToMain() {
 		if (this.reEnterPas.length !== 0 || this.reEnterPas !== "") {
 			console.log(this.reEnterPas);
@@ -228,18 +246,33 @@ export class HomePageComponent implements OnInit {
 								"decrypt",
 								this.encBody
 							);
+						} else if (this.actionType === "reload") {
+							return this.electronService.ipcRenderer.invoke(
+								"loadFileAgain",
+								this.encBody
+							);
 						}
 					}
 				})
-				.then((store) => {
+				.then(({ decData, newPass }) => {
 					if (this.actionType === "add") {
-						this.sortedVault = this.sortVault(store);
+						this.sortedVault = this.sortVault(decData);
 						this.loadComponent(2);
 					} else if (this.actionType === "decrypt") {
 						console.log("STPRE");
-						console.log(store);
-						this.store.vaultDecSub.next({ ...this.encBody, ...store });
+						console.log(decData);
+						const payload = {
+							body: { ...this.encBody },
+							main: { ...decData },
+							change: { ...newPass },
+						};
+						this.store.vaultDecSub.next(payload);
 						this.encBody = "";
+					} else if (this.actionType === "reload") {
+						console.log("reload succesful");
+						console.log(decData);
+						console.log(newPass);
+						this.initVault();
 					}
 					this.reEnterPas = "";
 					this.reEnterPrompt = false;
@@ -252,8 +285,7 @@ export class HomePageComponent implements OnInit {
 	}
 
 	initVault() {
-		this.sortedVault = this.sortVault(
-			this.electronService.ipcRenderer.sendSync("fetchVault", "all")
-		);
+		this.VAULT = this.electronService.ipcRenderer.sendSync("fetchVault", "all");
+		this.sortedVault = this.sortVault(this.VAULT);
 	}
 }

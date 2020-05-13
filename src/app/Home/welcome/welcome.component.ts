@@ -1,8 +1,6 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { ElectronService } from "ngx-electron";
+import { Component, Input, OnInit, Output, EventEmitter } from "@angular/core";
 import { User } from "src/app/interfaces/user";
-import { HttpService } from "src/app/Services/http-service.service";
-import { environment } from "src/environments/environment";
-import { HttpResponse } from "@angular/common/http";
 
 @Component({
 	selector: "app-welcome",
@@ -11,16 +9,42 @@ import { HttpResponse } from "@angular/common/http";
 })
 export class WelcomeComponent implements OnInit {
 	@Input() data: User;
-	constructor(private http: HttpService) {}
+	@Input() VAULT: any;
+	@Output() reEnterPrompt = new EventEmitter();
+	@Output() viewVault = new EventEmitter<number>();
+	constructor(private electron: ElectronService) {}
 
 	ngOnInit() {
-		// this.data = JSON.parse(this.storage.getItem("user"));
+		console.log(this.VAULT);
 	}
-	getSome() {
-		this.http
-			.postEndPoint([{ password: "BRUH what?" }], "upload", "test")
-			.subscribe((res: HttpResponse<any>) => {
-				console.log(res.body);
-			});
+
+	openFile(type: "json" | "csv") {
+		if (this.electron.isElectronApp) {
+			this.electron.ipcRenderer
+				.invoke("loadFile", type)
+				.then((reply) => {
+					if (!reply.status) {
+						this.reEnterPrompt.emit({
+							boo: true,
+							body: reply.path,
+							type: "reload",
+						});
+					} else {
+						console.log("File Imported");
+						console.log(reply);
+						this.viewVault.emit(2);
+					}
+				})
+				.catch((err) => {
+					console.error(err);
+				});
+		} else {
+		}
+	}
+
+	csvTest() {
+		this.electron.ipcRenderer.invoke("testCSV").then((e) => {
+			console.log(e);
+		});
 	}
 }

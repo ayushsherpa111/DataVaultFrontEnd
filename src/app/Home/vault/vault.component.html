@@ -29,6 +29,9 @@
 		<hr />
 	</div>
 	<div class="vaultData">
+		<div class="emptiness" *ngIf="(VAULT | json) === '{}'">
+			<h1>Your Vault is Empty</h1>
+		</div>
 		<div class="category" *ngFor="let i of VAULT | keyvalue">
 			<h1 class="title">{{ i.key }} ({{ i.value.length }})</h1>
 			<div
@@ -63,11 +66,18 @@
 								<p>{{ cat.email }}</p>
 							</div>
 							<div>
-								<span>URL: </span> <a href="{{ cat.url }}">{{ cat.url }}</a>
+								<span>URL: </span>
+								<a (click)="goTo(cat.url)" s>{{ cat.url }}</a>
 							</div>
 							<div>
 								<span>Category: </span>
 								<p>{{ cat.category }}</p>
+							</div>
+							<div>
+								<span>Synced: </span>
+								<p>
+									{{ cat.sync ? "Synced" : "Not Synced" }}
+								</p>
 							</div>
 							<div>
 								<span>Description: </span>
@@ -99,6 +109,18 @@
 								alt=""
 								srcset=""
 							/>
+							<div
+								class="safety"
+								data-tooltips="This Password is secure"
+								*ngIf="cat.secure; else elseblock"
+							>
+								<img src="assets/Images/verif.png" alt="" srcset="" />
+							</div>
+							<ng-template #elseblock>
+								<div class="safety" data-tooltips="This Password is NOT secure">
+									<img src="assets/Images/notsafe.png" alt="" srcset="" />
+								</div>
+							</ng-template>
 						</div>
 					</ng-template>
 				</div>
@@ -121,8 +143,19 @@
 			/>
 		</div>
 		<div class="details">
-			<p>Slack.com</p>
-			<img src="assets/Images/verif.png" alt="" srcset="" />
+			<p>{{ currentPass.domain }}</p>
+			<div
+				class="safety"
+				data-tooltip="This Password is secure"
+				*ngIf="currentPass.secure; else elseblock"
+			>
+				<img src="assets/Images/verif.png" alt="" srcset="" />
+			</div>
+			<ng-template #elseblock>
+				<div class="safety" data-tooltip="This Password is NOT secure">
+					<img src="assets/Images/notsafe.png" alt="" srcset="" />
+				</div>
+			</ng-template>
 		</div>
 		<img src="assets/Images/share.png" alt="" srcset="" class="share" />
 	</div>
@@ -223,9 +256,9 @@
 				<img src="assets/Images/delete.png" alt="" srcset="" />
 				Delete
 			</button>
-			<button class="regen" (click)="regenPass()">
-				<img src="assets/Images/regen.png" alt="" srcset="" />
-				Regenerate Password
+			<button class="sync" (click)="syncEmit(currentPass)">
+				<img src="assets/Images/sync.png" alt="" srcset="" />
+				Sync Now
 			</button>
 		</div>
 	</div>

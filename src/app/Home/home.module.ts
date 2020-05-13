@@ -1,13 +1,14 @@
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-
-import { HomeRoutingModule } from "./home-routing.module";
-import { HomePageComponent } from "./home-page/home-page.component";
-import { WelcomeComponent } from "./welcome/welcome.component";
+import { NgModule } from "@angular/core";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FilterVaultPipe } from "../pipes/filter-vault.pipe";
 import { AddPasswordComponent } from "./addPassword/addPassword.component";
-import { VaultComponent } from "./vault/vault.component";
+import { HomePageComponent } from "./home-page/home-page.component";
+import { HomeRoutingModule } from "./home-routing.module";
 import { PasswordGeneratorComponent } from "./passwordGenerator/passwordGenerator.component";
+import { VaultComponent } from "./vault/vault.component";
+import { WelcomeComponent } from "./welcome/welcome.component";
+import { AnalysisComponent } from "./analysis/analysis.component";
 
 @NgModule({
 	declarations: [
@@ -16,8 +17,9 @@ import { PasswordGeneratorComponent } from "./passwordGenerator/passwordGenerato
 		AddPasswordComponent,
 		VaultComponent,
 		PasswordGeneratorComponent,
+		FilterVaultPipe,
+		AnalysisComponent,
 	],
 	imports: [CommonModule, FormsModule, ReactiveFormsModule, HomeRoutingModule],
-	// entryComponents: [WelcomeComponent, AddPasswordComponent, VaultComponent],
 })
 export class HomeModule {}
